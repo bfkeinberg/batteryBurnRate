@@ -1,16 +1,19 @@
 using Toybox.WatchUi;
 using Toybox.System;
+using Toybox.Test;
 
 class BatteryBurnRateView extends WatchUi.SimpleDataField {
 	const secondsInHour = 3600;
 	var batteryValues = new [secondsInHour];
 	var startingTimeInMs;
+	var lastBurnRate;
 	
     // Set the label of the data field here.
     function initialize() {
         SimpleDataField.initialize();
         label = "Burn rate %/hour";
         startingTimeInMs = System.getTimer();
+        lastBurnRate = 0;
     }
 
     // The given info object contains all the current workout
@@ -36,6 +39,9 @@ class BatteryBurnRateView extends WatchUi.SimpleDataField {
 				burnRate = getBurnRateLaterHours(currentHourSecond, battery);		
 			}
 			me.batteryValues[currentHourSecond] = battery;
+			if (burnRate != 0) {
+				me.lastBurnRate = burnRate;
+			}
 		}
 		return burnRate;
 	}
@@ -44,13 +50,30 @@ class BatteryBurnRateView extends WatchUi.SimpleDataField {
 		if (seconds == 0) {
 			return 0;
 		} 
+		if (me.batteryValues[0] == null) {
+			System.println("No initial battery value");
+			return 0;
+		}
 		var drainFromStart = me.batteryValues[0] - battery;
 		return (secondsInHour * drainFromStart) / seconds;
 	}
 
+	function findClosestBatteryValue(seconds) {
+		for (var where = 0; where < 5 && seconds >= where; ++where) {
+			if (me.batteryValues[seconds-where] != null) {
+				return me.batteryValues[seconds-where];
+			}
+		}
+		return null;
+	} 
+	
 	function getBurnRateLaterHours(seconds, battery) {
-		Test.assertMessage(me.batteryValues[seconds] != null, "Battery status must be defined");
-		var drainPerHour = me.batteryValues[seconds] - battery;
+		var previousBatteryValue = findClosestBatteryValue(seconds);
+		if (previousBatteryValue == null) {
+			System.println("No battery value at " + seconds + " seconds");
+			return me.lastBurnRate;
+		}
+		var drainPerHour = previousBatteryValue - battery;
 		return drainPerHour;
 	}	
 	
