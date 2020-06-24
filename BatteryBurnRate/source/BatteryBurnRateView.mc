@@ -41,6 +41,8 @@ class BatteryBurnRateView extends WatchUi.SimpleDataField {
 			me.batteryValues[currentHourSecond] = battery;
 			if (burnRate != 0) {
 				me.lastBurnRate = burnRate;
+			} else {
+				burnRate = me.lastBurnRate;
 			}
 		}
 		return burnRate;
