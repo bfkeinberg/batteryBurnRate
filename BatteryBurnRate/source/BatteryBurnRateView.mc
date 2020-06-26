@@ -5,6 +5,7 @@ using Toybox.Test;
 class BatteryBurnRateView extends WatchUi.SimpleDataField {
 	const secondsInHour = 3600;
 	var batteryValues = new [secondsInHour];
+	var timesForBattery = new [secondsInHour];
 	var startingTimeInMs;
 	var lastBurnRate;
 	
@@ -29,21 +30,24 @@ class BatteryBurnRateView extends WatchUi.SimpleDataField {
 		var timeInMs = System.getTimer();
 		var seconds = (timeInMs - me.startingTimeInMs) / 1000;
 		var currentHourSecond = seconds % self.secondsInHour; 
-		var battery = System.getSystemStats().battery;
-		var burnRate = null;
+		var currentHour = seconds / self.secondsInHour;
+		var systemStats = System.getSystemStats();
+		var battery = systemStats == null ? null : systemStats.battery;
+		var burnRate = 0;
 		if (battery != null) {
 			if (seconds < me.secondsInHour) {
 				burnRate = getBurnRateFirstHour(seconds, battery);
 			}
 			else {
-				burnRate = getBurnRateLaterHours(currentHourSecond, battery);		
+				burnRate = getBurnRateLaterHours(currentHourSecond, currentHour, battery);		
 			}
-			me.batteryValues[currentHourSecond] = battery;
-			if (burnRate != 0) {
-				me.lastBurnRate = burnRate;
-			} else {
-				burnRate = me.lastBurnRate;
-			}
+			self.timesForBattery[currentHourSecond] = currentHour;
+			self.batteryValues[currentHourSecond] = battery;			
+		}
+		if (burnRate != 0) {
+			me.lastBurnRate = burnRate;
+		} else {
+			burnRate = me.lastBurnRate;
 		}
 		return burnRate;
 	}
@@ -63,20 +67,26 @@ class BatteryBurnRateView extends WatchUi.SimpleDataField {
 	function findClosestBatteryValue(seconds) {
 		for (var where = 0; where < 5 && seconds >= where; ++where) {
 			if (me.batteryValues[seconds-where] != null) {
-				return me.batteryValues[seconds-where];
+				return [ me.timesForBattery[seconds-where], me.batteryValues[seconds-where] ];
 			}
 		}
 		return null;
 	} 
 	
-	function getBurnRateLaterHours(seconds, battery) {
+	function getBurnRateLaterHours(seconds, currentHour, battery) {
 		var previousBatteryValue = findClosestBatteryValue(seconds);
 		if (previousBatteryValue == null) {
 			System.println("No battery value at " + seconds + " seconds");
 			return me.lastBurnRate;
 		}
-		var drainPerHour = previousBatteryValue - battery;
-		return drainPerHour;
+		System.println("Dereferencing previous battery values array at " + seconds + " current hour " + currentHour);
+		var elapsedHours = currentHour - previousBatteryValue[0];
+		if (elapsedHours > 1) {
+			var drainPerHour = (previousBatteryValue[1] - battery)/elapsedHours;
+			return drainPerHour;
+		} else {
+			return me.lastBurnRate;
+		}
 	}	
 	
 }
