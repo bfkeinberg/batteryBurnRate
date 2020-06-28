@@ -1,19 +1,25 @@
 using Toybox.WatchUi;
 using Toybox.System;
+using Toybox.Graphics;
 using Toybox.Test;
 using Toybox.Lang;
 using Toybox.Application;
 
-class BatteryBurnRateView extends WatchUi.SimpleDataField {
-
-	var regressionMode = false;
-	
+class BatteryBurnRateView extends WatchUi.DataField {
+  var regressionMode = false;
+  
 	const secondsInHour = 3600;
+	const veryHighBurnRate = 12;
+	const lowMemoryDivisor = 6;
+	var batteryValues;
+	var timesForBattery;
+	var lowMemoryMode = false;	
+	
 	var startingTimeInMs;
-	var lastBurnRate = 0.0;
-	var batteryValues = null;
-
-	const updateInterval = 60; // Compute only every x s to save some energy
+	var lastBurnRate;
+	var currentBurnRate;
+	
+  const updateInterval = 60; // Compute only every x s to save some energy
 	const bufferSize = 500;    // Keep 500 values in ring buffer 
 	var estimatedBatteryLife = 10*3600; // The covered time span of the ring buffer
 	var batteryValuesT = null; // The data structure (time values)
@@ -21,26 +27,65 @@ class BatteryBurnRateView extends WatchUi.SimpleDataField {
 	var beta1 = 0.0; // regression coefficient (slope)
 	var beta0 = 0.0; // regression coefficient (intercept)
 	var etaInHours = 10.0; // initial estimated time until battery dead
-	
+
     // Set the label of the data field here.
     function initialize() {
-        SimpleDataField.initialize();
-		me.regressionMode = Application.Properties.getValue("regressionMode");
-		me.estimatedBatteryLife = Application.Properties.getValue("estimatedBatteryLife")*3600;
+        DataField.initialize();
+        startingTimeInMs = System.getTimer();
+        lastBurnRate = 0;
+        currentBurnRate = 0;
+  	  	me.regressionMode = Application.Properties.getValue("regressionMode");
+	  	  me.estimatedBatteryLife = Application.Properties.getValue("estimatedBatteryLife")*3600;
 		// DEBUG as sideloading does not support user-settings
 		// me.regressionMode = true;
 		// me.estimatedBatteryLife = 10*3600;
-		System.println("me.regressionMode: " + me.regressionMode + ", me.estimatedBatteryLife: " + me.estimatedBatteryLife + ", me.bufferSize: " + me.bufferSize);
-		if (me.regressionMode){
-        	label = "Burn rate %/hour (ETA)";
-			me.batteryValuesT = new [me.bufferSize]; 
-			me.batteryValuesY = new [me.bufferSize];
-		}else{
-        	label = "Burn rate %/hour";
-			me.batteryValues = new [me.secondsInHour]; // Save some memory
-		}
-        startingTimeInMs = System.getTimer();
-        lastBurnRate = 0;
+  		System.println("me.regressionMode: " + me.regressionMode + ", me.estimatedBatteryLife: " + me.estimatedBatteryLife + ", me.bufferSize: " + me.bufferSize);
+      if (me.regressionMode){
+        me.batteryValuesT = new [me.bufferSize]; 
+        me.batteryValuesY = new [me.bufferSize];
+      }
+	  	else if (System.getSystemStats().freeMemory > 20000) {
+        batteryValues = new [secondsInHour];
+        timesForBattery = new [secondsInHour];
+  		} else {
+        batteryValues = new [secondsInHour/6];
+        timesForBattery = new [secondsInHour/6];
+        lowMemoryMode = true;		
+  		}
+    }
+
+    // Set your layout here. Anytime the size of obscurity of
+    // the draw context is changed this will be called.
+    function onLayout(dc) {
+        var obscurityFlags = DataField.getObscurityFlags();
+
+        // Top left quadrant so we'll use the top left layout
+        if (obscurityFlags == (OBSCURE_TOP | OBSCURE_LEFT)) {
+            View.setLayout(Rez.Layouts.TopLeftLayout(dc));
+
+        // Top right quadrant so we'll use the top right layout
+        } else if (obscurityFlags == (OBSCURE_TOP | OBSCURE_RIGHT)) {
+            View.setLayout(Rez.Layouts.TopRightLayout(dc));
+
+        // Bottom left quadrant so we'll use the bottom left layout
+        } else if (obscurityFlags == (OBSCURE_BOTTOM | OBSCURE_LEFT)) {
+            View.setLayout(Rez.Layouts.BottomLeftLayout(dc));
+
+        // Bottom right quadrant so we'll use the bottom right layout
+        } else if (obscurityFlags == (OBSCURE_BOTTOM | OBSCURE_RIGHT)) {
+            View.setLayout(Rez.Layouts.BottomRightLayout(dc));
+
+        // Use the generic, centered layout
+        } else {
+            View.setLayout(Rez.Layouts.MainLayout(dc));
+            var labelView = View.findDrawableById("label");
+            labelView.locY = labelView.locY - 16;
+            var valueView = View.findDrawableById("value");
+            valueView.locY = valueView.locY + 7;
+        }
+
+        View.findDrawableById("label").setText(Rez.Strings.label);
+        return true;
     }
 
     // The given info object contains all the current workout
@@ -49,31 +94,74 @@ class BatteryBurnRateView extends WatchUi.SimpleDataField {
     // guarantee that compute() will be called before onUpdate().
     function compute(info) {
         // See Activity.Info in the documentation for available information.
-        return getBurnRate();
+        currentBurnRate = getBurnRate();
     }
+    
+   //! Display the value you computed here. This will be called
+    //! once a second when the data field is visible.
+    function onUpdate(dc)
+    {
+	    var dataColor;
+	    
+      var label = View.findDrawableById("label");
+      if (regressionMode) {
+        label.setText("Burn rate %/hour (ETA)");
+      } else {
+        label.setText("Burn rate %/hour");
+      }
+	    if (getBackgroundColor() == Graphics.COLOR_BLACK) {
+	        label.setColor(Graphics.COLOR_WHITE);
+    			dataColor = Graphics.COLOR_WHITE;
+	    } else {
+	        label.setColor(Graphics.COLOR_BLACK);
+			dataColor = Graphics.COLOR_BLACK;
+		}
+	    if (currentBurnRate > veryHighBurnRate) {
+	    	dataColor = Graphics.COLOR_RED;
+    	}
+        View.findDrawableById("Background").setColor(getBackgroundColor());
+        var value = View.findDrawableById("value");
+        value.setColor(dataColor);
+		var burnRateString = currentBurnRate.format("%.1f") + "%";
+        value.setText(burnRateString);
+        View.onUpdate(dc);
+	}    
 
+	function convertSecondsForLookup(seconds) {
+		if (lowMemoryMode) {
+			return seconds/lowMemoryDivisor;
+		} else {
+			return seconds;
+		}
+	}
+	 	
 	function getBurnRate() {
 		var timeInMs = System.getTimer();
 		var seconds = (timeInMs - me.startingTimeInMs) / 1000;
 		var currentHourSecond = seconds % self.secondsInHour; 
-		var battery = System.getSystemStats().battery;
-		var burnRate = null;
+		var currentHour = seconds / self.secondsInHour;
+		var systemStats = System.getSystemStats();
+		var battery = systemStats == null ? null : systemStats.battery;
+		var burnRate = 0;
 		if (battery != null) {
-			if (me.regressionMode){
-				burnRate = regressBurnRate(seconds, battery);
-			}
-			else{
-				if (seconds < me.secondsInHour) {
-					burnRate = getBurnRateFirstHour(seconds, battery);
-				}
-				else {
-					burnRate = getBurnRateLaterHours(currentHourSecond, battery);		
-				}
-				me.batteryValues[currentHourSecond] = battery;
-				if (burnRate != 0) {
-					me.lastBurnRate = burnRate;
-				}
-			}
+      if (me.regressionMode){
+        burnRate = regressBurnRate(seconds, battery);
+			} else {
+        var effectiveHourSecond = convertSecondsForLookup(currentHourSecond);
+        if (seconds < me.secondsInHour) {
+          burnRate = getBurnRateFirstHour(convertSecondsForLookup(seconds), battery);
+        }
+        else {
+          burnRate = getBurnRateLaterHours(effectiveHourSecond, currentHour, battery);		
+        }
+        self.timesForBattery[effectiveHourSecond] = currentHour;
+        self.batteryValues[effectiveHourSecond] = battery;
+      }
+		}
+		if (burnRate != 0) {
+			me.lastBurnRate = burnRate;
+		} else {
+			burnRate = me.lastBurnRate;
 		}
 		return burnRate;
 	}
@@ -82,31 +170,37 @@ class BatteryBurnRateView extends WatchUi.SimpleDataField {
 		if (seconds == 0) {
 			return 0;
 		} 
-		if (me.batteryValues[0] == null) {
-			System.println("No initial battery value");
+		if (batteryValues[0] == null) {
+			System.println("No initial battery value at " + seconds);
+			batteryValues[0] = battery;
 			return 0;
 		}
-		var drainFromStart = me.batteryValues[0] - battery;
+		var drainFromStart = batteryValues[0] - battery;
 		return (secondsInHour * drainFromStart) / seconds;
 	}
 
 	function findClosestBatteryValue(seconds) {
 		for (var where = 0; where < 5 && seconds >= where; ++where) {
-			if (me.batteryValues[seconds-where] != null) {
-				return me.batteryValues[seconds-where];
+			if (batteryValues[seconds-where] != null) {
+				return [ timesForBattery[seconds-where], me.batteryValues[seconds-where] ];
 			}
 		}
 		return null;
 	} 
 	
-	function getBurnRateLaterHours(seconds, battery) {
+	function getBurnRateLaterHours(seconds, currentHour, battery) {
 		var previousBatteryValue = findClosestBatteryValue(seconds);
 		if (previousBatteryValue == null) {
 			System.println("No battery value at " + seconds + " seconds");
 			return me.lastBurnRate;
 		}
-		var drainPerHour = previousBatteryValue - battery;
-		return drainPerHour;
+		var elapsedHours = currentHour - previousBatteryValue[0];
+		if (elapsedHours > 1) {
+			var drainPerHour = (previousBatteryValue[1] - battery)/elapsedHours;
+			return drainPerHour;
+		} else {
+			return me.lastBurnRate;
+		}
 	}	
 
 	function regressBurnRate(seconds, battery){
