@@ -142,6 +142,7 @@ class BatteryBurnRateView extends WatchUi.DataField {
 		if (batteryValues[0] == null) {
 			System.println("No initial battery value at " + seconds);
 			batteryValues[0] = battery;
+			timesForBattery[0] = 0;
 			return 0;
 		}
 		var drainFromStart = batteryValues[0] - battery;
@@ -150,7 +151,7 @@ class BatteryBurnRateView extends WatchUi.DataField {
 
 	function findClosestBatteryValue(seconds) {
 		for (var where = 0; where < 5 && seconds >= where; ++where) {
-			if (batteryValues[seconds-where] != null) {
+			if (batteryValues[seconds-where] != null && timesForBattery[seconds-where] != null) {
 				return [ timesForBattery[seconds-where], me.batteryValues[seconds-where] ];
 			}
 		}
