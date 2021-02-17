@@ -1,5 +1,6 @@
 <strings>
     <string id="AppName">BatteryBurnRate</string>
-
+    <string id="regressionMode">Use regression mode</string>
+    <string id="estimatedBatteryLife">Estimated battery life of device (hours)</string>
     <string id="label">My Value</string>
 </strings>
