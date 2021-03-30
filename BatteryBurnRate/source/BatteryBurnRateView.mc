@@ -5,6 +5,7 @@ using Toybox.Test;
 
 class BatteryBurnRateView extends WatchUi.DataField {
 	const secondsInHour = 3600;
+	const warmupTime = 1200;
 	const veryHighBurnRate = 12;
 	const lowMemoryDivisor = 6;
 	var batteryValues;
@@ -89,14 +90,19 @@ class BatteryBurnRateView extends WatchUi.DataField {
 	        label.setColor(Graphics.COLOR_BLACK);
 			dataColor = Graphics.COLOR_BLACK;
 		}
-	    if (currentBurnRate > veryHighBurnRate) {
+		var burnRateIsString = currentBurnRate instanceof String;
+	    if (!(currentBurnRate instanceof String) && currentBurnRate > veryHighBurnRate) {
 	    	dataColor = Graphics.COLOR_RED;
     	}
         View.findDrawableById("Background").setColor(getBackgroundColor());
         var value = View.findDrawableById("value");
         value.setColor(dataColor);
-		var burnRateString = currentBurnRate.format("%.1f") + "%";
-        value.setText(burnRateString);
+        if (!(currentBurnRate instanceof String)) {
+			var burnRateString = currentBurnRate.format("%.1f") + "%";
+	        value.setText(burnRateString);
+        } else {
+        	value.setText(currentBurnRate);
+    	}
         View.onUpdate(dc);
 	}    
 
@@ -119,9 +125,13 @@ class BatteryBurnRateView extends WatchUi.DataField {
 		if (battery != null) {
 			var effectiveHourSecond = convertSecondsForLookup(currentHourSecond);
 			if (seconds < me.secondsInHour) {
-				burnRate = getBurnRateFirstHour(convertSecondsForLookup(seconds), battery);
-			}
-			else {
+				if (seconds < me.warmupTime) {
+					burnRate = "Calculating...";
+					getBurnRateFirstHour(convertSecondsForLookup(seconds), battery);
+				} else {
+					burnRate = getBurnRateFirstHour(convertSecondsForLookup(seconds), battery);
+				}
+			} else {
 				burnRate = getBurnRateLaterHours(effectiveHourSecond, currentHour, battery);		
 			}
 			self.timesForBattery[effectiveHourSecond] = currentHour;
