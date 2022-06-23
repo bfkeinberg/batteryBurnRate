@@ -2,6 +2,7 @@ using Toybox.WatchUi;
 using Toybox.System;
 using Toybox.Graphics;
 using Toybox.Test;
+using Toybox.AntPlus;
 
 class BatteryBurnRateView extends WatchUi.DataField {
 	const secondsInHour = 3600;
