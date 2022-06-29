@@ -3,10 +3,29 @@ using Toybox.System;
 using Toybox.Graphics;
 using Toybox.Test;
 using Toybox.AntPlus;
+using Toybox.Time;
 
 class BatteryBurnRateView extends WatchUi.DataField {
-	const secondsInHour = 3600;
-	const warmupTime = 1200;
+
+	// Algorithm, v2.   Capture primary data points every 
+	// approximately every 4 minutes.  
+	const do_simulate = 0; // The time code is broken in sim.   Fake it.
+	var   sim_ut;
+	
+	// Primary data point collection.
+	const pdp_sample_interval_ms = 4*60*1000; // Set low for debug.
+	const pdp_data_points        = 16;    // This make masks easy.
+
+	// Running sample time.
+	hidden var pdp_sample_interpolater; // Used to decide when to keep a sample
+	hidden var pdp_sample_time_last_ms;     
+
+	hidden var pdp_data_battery;        // Battery data points.
+	hidden var pdp_data_time_ut;	    // Timestamps to go with the data. 
+	hidden var pdp_data_i;	            // Index.  Use with a mask.
+
+	const secondsInHour = 36;
+	const warmupTime = 12;
 	const veryHighBurnRate = 12;
 	const lowMemoryDivisor = 6;
 	var batteryValues;
@@ -20,6 +39,14 @@ class BatteryBurnRateView extends WatchUi.DataField {
     // Set the label of the data field here.
     function initialize() {
         DataField.initialize();
+
+		// Interpolator initialization.
+		pdp_sample_interpolater = 0; // Start with zero to capture a point now.. 
+		pdp_sample_time_last_ms = 0;  
+		pdp_data_i = 0; // The total number of samples.
+		pdp_data_time_ut = new [ pdp_data_points ];
+		pdp_data_battery = new [ pdp_data_points ];
+
         startingTimeInMs = System.getTimer();
         lastBurnRate = 0;
         currentBurnRate = 0;
@@ -31,6 +58,9 @@ class BatteryBurnRateView extends WatchUi.DataField {
 			timesForBattery = new [secondsInHour/6];
 			lowMemoryMode = true;		
 		}
+
+		sim_ut = 0; 
+
     }
 
     // Set your layout here. Anytime the size of obscurity of
@@ -67,13 +97,148 @@ class BatteryBurnRateView extends WatchUi.DataField {
         return true;
     }
 
+	// Calculate the least squares fit of the data. 
+    function extrapolate() {
+
+		// First - if there isn't enough data, stop now. 
+
+		if ( pdp_data_i < 2 ) {
+			// TODO: Put some code here to generate a message. 
+			return;
+			}
+
+		// Fit to whatever is present, even if its not much.
+		var data_offset  = pdp_data_i; // This should be the oldest point.
+
+		// Partial data is a special case. Start at zero. 
+		if ( data_offset < pdp_data_points ) { data_offset = 0; }
+
+		var fitsize = pdp_data_i;
+		if ( fitsize > pdp_data_points ) { fitsize = pdp_data_points; }
+
+		System.print("Extrapolate: ");
+		// Make a snapstop of the real data and align it + normalize to hours.
+		// Recall that the data buffer pointer is always pointing to the oldest 
+		// item in the ring. 
+		var data_x       = new [ pdp_data_points ];
+		var data_y       = new [ pdp_data_points ];
+
+		{
+			var t0 = pdp_data_time_ut[data_offset & 0xf];
+
+			// Convert from seconds to hours...
+
+			for (var i=0; i < fitsize; i++) {
+				var adj_i = (i + data_offset) & 0xf; 
+
+				var ut = pdp_data_time_ut[adj_i];
+
+      			data_x[i] = (ut - t0) *  0.000277777777777777777777; 
+				data_y[i] = pdp_data_battery[adj_i];
+    		}
+		}
+
+		// From https://www.mathsisfun.com/data/least-squares-regression.html
+
+		var slope; 
+		{
+			var sum_x, sum_y, sum_xx, sum_xy; 
+			sum_x = 0.0; sum_y = 0.0; sum_xx = 0.0; sum_xy = 0.0;
+			for (var i=0; i < fitsize; i++){
+				sum_x  += data_x[i]; 
+				sum_y  += data_y[i];
+				sum_xx += data_x[i] * data_x[i]; 
+				sum_xy += data_x[i] * data_y[i]; 
+    		}
+
+			var num   = fitsize * sum_xy - sum_x * sum_y; 
+			var denom = fitsize * sum_xx - sum_xx; 
+
+			// Check for divide by zero.
+			if ( denom != 0.0 ) { slope = num / denom; }
+			else                { slope = 0; }
+		}
+
+		// The input unit is already in percent. 
+		System.println("Pct/H: " + slope.format("%.1f") );
+
+		// Calculate the expected runtime from the most recent data point. 
+		// Look out for divide by zero errors
+		var batt_level = pdp_data_battery[ (pdp_data_i-1) & 0xf];
+		var runtime_estimate; 
+		if ( slope < 0 ) { 
+			runtime_estimate = -1.0 * batt_level / slope; 
+		} else { runtime_estimate = 48.0; }
+
+		if ( runtime_estimate > 48.0 ) {
+			System.println("Estimate(h) 48h+" + runtime_estimate );
+		} else {
+			System.println("Estimate(h) " + runtime_estimate );
+		}
+	}
+
     // The given info object contains all the current workout
     // information. Calculate a value and return it in this method.
     // Note that compute() and onUpdate() are asynchronous, and there is no
     // guarantee that compute() will be called before onUpdate().
+
+	// Notes on data collection -
+	// The primary collection loop uses the system ms timer along with 
+	// a running error a la Bresenhams algorithm. 
+	// Every time there is a primary data point, collect a
+	// moment ( in seconds ) and use that as the x coordinate for the 
+	// linear regression fit. 
+
+	var today = new Time.Moment(Time.today().value()); 
+
     function compute(info) {
         // See Activity.Info in the documentation for available information.
         currentBurnRate = getBurnRate();
+
+		// The simulator is broken.   Generate time.
+		if ( do_simulate == 1 ) { sim_ut++; } 
+
+		// Try to capture a primary data point.
+		{
+			var now = System.getTimer();
+			var duration = now - pdp_sample_time_last_ms;
+			pdp_sample_time_last_ms = now;
+			pdp_sample_interpolater -= duration; // Use Bresenhams Algorithm.
+		} 
+
+		if (pdp_sample_interpolater >= 0 )  { 
+			System.print("Sample ");
+			return;
+			}
+		else {
+			pdp_sample_interpolater += pdp_sample_interval_ms; // Reset!
+			System.println("Sample PDP Add " + pdp_data_i ); 
+		}
+
+		// Now decide whether or not to keep the sample.
+		// if things are plugged in, no. FIXME 
+		// RS: Maybe this isn't necessary if the app simply declines 
+		// to show bogus data. 
+		var systemStats = System.getSystemStats();
+		var battery = systemStats == null ? null : systemStats.battery;
+		if ( battery == null ) { return; }
+
+		var index = pdp_data_i & 0xF;
+
+		var now_ut = new Time.Moment(Time.today().value()); 
+
+		// Detect the first point and fake it.   Otherwise 
+		// advance time by 1s/s 
+		if ( do_simulate == 1 ) {
+			pdp_data_time_ut[index] = sim_ut; 
+		} else {
+			pdp_data_time_ut[index] = now_ut.value();
+			}	
+
+		pdp_data_battery[index] = battery;
+		pdp_data_i++;
+
+		extrapolate();
     }
     
    //! Display the value you computed here. This will be called
