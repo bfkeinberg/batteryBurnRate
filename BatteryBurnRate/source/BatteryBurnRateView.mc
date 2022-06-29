@@ -8,21 +8,22 @@ using Toybox.Time;
 class BatteryBurnRateView extends WatchUi.DataField {
 
 	// Algorithm, v2.   Capture primary data points every 
-	// approximately every 4 minutes.  
-	const do_simulate = 0; // The time code is broken in sim.   Fake it.
+	// time the battery charge changes more than 1%  
+	const do_simulate = 1; // The time code is broken in sim.   Fake it.
 	var   sim_ut;
 	
 	// Primary data point collection.
-	const pdp_sample_interval_ms = 4*60*1000; // Set low for debug.
-	const pdp_data_points        = 16;    // This make masks easy.
+	const      pdp_data_points    = 16;          // This make masks easy.
 
-	// Running sample time.
-	hidden var pdp_sample_interpolater; // Used to decide when to keep a sample
-	hidden var pdp_sample_time_last_ms;     
+	const      pdp_sample_timeout_tunable = 300*1000; // Capture a data point if no change...
+	var        pdp_sample_timeout_ms;                 // The countdown variable.
+	var        pdp_sample_time_last_ms; 
 
 	hidden var pdp_data_battery;        // Battery data points.
 	hidden var pdp_data_time_ut;	    // Timestamps to go with the data. 
 	hidden var pdp_data_i;	            // Index.  Use with a mask.
+
+	hidden var pdp_battery_last;        // Trigger data collection on  battery level change.
 
 	const secondsInHour = 36;
 	const warmupTime = 12;
@@ -40,12 +41,13 @@ class BatteryBurnRateView extends WatchUi.DataField {
     function initialize() {
         DataField.initialize();
 
-		// Interpolator initialization.
-		pdp_sample_interpolater = 0; // Start with zero to capture a point now.. 
-		pdp_sample_time_last_ms = 0;  
 		pdp_data_i = 0; // The total number of samples.
+		pdp_sample_time_last_ms = System.getTimer(); 
+		pdp_sample_timeout_ms   = 0; 
+
 		pdp_data_time_ut = new [ pdp_data_points ];
 		pdp_data_battery = new [ pdp_data_points ];
+		pdp_battery_last = 200.0; // Set this to an invalid value so that it triggers immediately.
 
         startingTimeInMs = System.getTimer();
         lastBurnRate = 0;
@@ -101,7 +103,6 @@ class BatteryBurnRateView extends WatchUi.DataField {
     function extrapolate() {
 
 		// First - if there isn't enough data, stop now. 
-
 		if ( pdp_data_i < 2 ) {
 			// TODO: Put some code here to generate a message. 
 			return;
@@ -118,8 +119,7 @@ class BatteryBurnRateView extends WatchUi.DataField {
 
 		System.print("Extrapolate: ");
 		// Make a snapstop of the real data and align it + normalize to hours.
-		// Recall that the data buffer pointer is always pointing to the oldest 
-		// item in the ring. 
+		// Recall that the data buffer pointer is always pointing to the oldest item in the ring. 
 		var data_x       = new [ pdp_data_points ];
 		var data_y       = new [ pdp_data_points ];
 
@@ -198,22 +198,22 @@ class BatteryBurnRateView extends WatchUi.DataField {
 		// The simulator is broken.   Generate time.
 		if ( do_simulate == 1 ) { sim_ut++; } 
 
-		// Try to capture a primary data point.
+		// Update the timeout. 
+		var timeout_happened; 
 		{
 			var now = System.getTimer();
 			var duration = now - pdp_sample_time_last_ms;
 			pdp_sample_time_last_ms = now;
-			pdp_sample_interpolater -= duration; // Use Bresenhams Algorithm.
-		} 
 
-		if (pdp_sample_interpolater >= 0 )  { 
-			System.print("Sample ");
-			return;
-			}
-		else {
-			pdp_sample_interpolater += pdp_sample_interval_ms; // Reset!
-			System.println("Sample PDP Add " + pdp_data_i ); 
-		}
+			pdp_sample_timeout_ms -= duration; // Use Bresenhams Algorithm.
+
+			if ( pdp_sample_timeout_ms  < 0 ) {
+				timeout_happened = 1;
+				pdp_sample_timeout_ms += pdp_sample_timeout_tunable;
+				System.println("Sampling Timeout"); 
+ 			}
+			else { timeout_happened = 0; }
+		} 
 
 		// Now decide whether or not to keep the sample.
 		// if things are plugged in, no. FIXME 
@@ -223,19 +223,25 @@ class BatteryBurnRateView extends WatchUi.DataField {
 		var battery = systemStats == null ? null : systemStats.battery;
 		if ( battery == null ) { return; }
 
-		var index = pdp_data_i & 0xF;
+		// If the value of the battery percentage has changed more than 
+		// 1%, capture a data point. 
+		var delta = (pdp_battery_last - battery).abs();
+		if ( (delta < 1.0) && (timeout_happened == 0) ) { return; } 
+
+		pdp_battery_last = battery;
+
+		System.println("Sample PDP Add " + pdp_data_i + " " + battery ); 
 
 		var now_ut = new Time.Moment(Time.today().value()); 
+		var i      = pdp_data_i & 0xF;
 
-		// Detect the first point and fake it.   Otherwise 
-		// advance time by 1s/s 
 		if ( do_simulate == 1 ) {
-			pdp_data_time_ut[index] = sim_ut; 
+			pdp_data_time_ut[i] = sim_ut; 
 		} else {
-			pdp_data_time_ut[index] = now_ut.value();
+			pdp_data_time_ut[i] = now_ut.value();
 			}	
 
-		pdp_data_battery[index] = battery;
+		pdp_data_battery[i] = battery;
 		pdp_data_i++;
 
 		extrapolate();
