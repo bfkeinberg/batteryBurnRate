@@ -253,9 +253,11 @@ class BatteryBurnRateView extends WatchUi.DataField {
     function onUpdate(dc)
     {
 	    var dataColor;
-	    
+
+    
         var label = View.findDrawableById("label");
-        label.setText("Burn rate %/hour");
+
+		// Reverse the colors for day/night.
 	    if (getBackgroundColor() == Graphics.COLOR_BLACK) {
 	        label.setColor(Graphics.COLOR_WHITE);
 			dataColor = Graphics.COLOR_WHITE;
@@ -263,12 +265,17 @@ class BatteryBurnRateView extends WatchUi.DataField {
 	        label.setColor(Graphics.COLOR_BLACK);
 			dataColor = Graphics.COLOR_BLACK;
 		}
-
-		if ( burn_rate_slope < veryHighBurnRate ) {
-	    	dataColor = Graphics.COLOR_RED;
-    	}
-
         View.findDrawableById("Background").setColor(getBackgroundColor());
+
+		// Display Burn and Charge separately.
+		if ( burn_rate_slope > 0.0 )  {
+	        label.setText("Charge/h");
+		} else { 
+		    label.setText("Burn/h");
+			if ( burn_rate_slope < veryHighBurnRate ) {
+		    	dataColor = Graphics.COLOR_RED;
+			}
+		}
 
 		// Display the data.   Check for an invalid value. 
         var value = View.findDrawableById("value");
