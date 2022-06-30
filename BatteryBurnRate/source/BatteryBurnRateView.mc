@@ -258,7 +258,8 @@ class BatteryBurnRateView extends WatchUi.DataField {
 		// Display the data.  If its an invalid value, render as dots. 
         var value = View.findDrawableById("value");
         if (  burn_rate_slope != burn_rate_invalid ) {
-	        value.setText(burn_rate_slope.format("%.1f") + "%");
+			var abs_d = burn_rate_slope.abs();
+	        value.setText(abs_d.format("%.1f") + "%");
         } else {
         	value.setText("...");
     	}
