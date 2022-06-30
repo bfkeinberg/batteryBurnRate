@@ -25,9 +25,17 @@ class BatteryBurnRateView extends WatchUi.DataField {
 
 	hidden var pdp_battery_last;        // Trigger data collection on  battery level change.
 
+	hidden var burn_rate_slope;            // Burn rate as a slope. 
+	const      burn_rate_invalid = 1000.0; // A Magic Value  
+	hidden var burn_rate_text;             // Human-readable. 
+
+	// TUNABLES 
+	// Make the display red if burn rate exceeds 12%/h 
+	const veryHighBurnRate = -12.0;
+
+
 	const secondsInHour = 36;
 	const warmupTime = 12;
-	const veryHighBurnRate = 12;
 	const lowMemoryDivisor = 6;
 	var batteryValues;
 	var timesForBattery;
@@ -48,6 +56,9 @@ class BatteryBurnRateView extends WatchUi.DataField {
 		pdp_data_time_ut = new [ pdp_data_points ];
 		pdp_data_battery = new [ pdp_data_points ];
 		pdp_battery_last = 200.0; // Set this to an invalid value so that it triggers immediately.
+
+		burn_rate_slope = 0.0;
+		burn_rate_text  = "";
 
         startingTimeInMs = System.getTimer();
         lastBurnRate = 0;
@@ -100,11 +111,13 @@ class BatteryBurnRateView extends WatchUi.DataField {
     }
 
 	// Calculate the least squares fit of the data. 
-    function extrapolate() {
+    function estimate() {
 
-		// First - if there isn't enough data, stop now. 
+		// If there isn't enough data, stop now. 
 		if ( pdp_data_i < 2 ) {
 			// TODO: Put some code here to generate a message. 
+			burn_rate_slope = burn_rate_invalid;
+			burn_rate_text  = "...";
 			return;
 			}
 
@@ -133,6 +146,7 @@ class BatteryBurnRateView extends WatchUi.DataField {
 
 				var ut = pdp_data_time_ut[adj_i];
 
+				// Seconds to Hours. 
       			data_x[i] = (ut - t0) *  0.000277777777777777777777; 
 				data_y[i] = pdp_data_battery[adj_i];
     		}
@@ -156,25 +170,12 @@ class BatteryBurnRateView extends WatchUi.DataField {
 
 			// Check for divide by zero.
 			if ( denom != 0.0 ) { slope = num / denom; }
-			else                { slope = 0; }
+			else                { slope = 0.0; }
 		}
 
 		// The input unit is already in percent. 
 		System.println("Pct/H: " + slope.format("%.1f") );
-
-		// Calculate the expected runtime from the most recent data point. 
-		// Look out for divide by zero errors
-		var batt_level = pdp_data_battery[ (pdp_data_i-1) & 0xf];
-		var runtime_estimate; 
-		if ( slope < 0 ) { 
-			runtime_estimate = -1.0 * batt_level / slope; 
-		} else { runtime_estimate = 48.0; }
-
-		if ( runtime_estimate > 48.0 ) {
-			System.println("Estimate(h) 48h+" + runtime_estimate );
-		} else {
-			System.println("Estimate(h) " + runtime_estimate );
-		}
+		burn_rate_slope = slope; 
 	}
 
     // The given info object contains all the current workout
@@ -224,7 +225,7 @@ class BatteryBurnRateView extends WatchUi.DataField {
 		if ( battery == null ) { return; }
 
 		// If the value of the battery percentage has changed more than 
-		// 1%, capture a data point. 
+		// 1%, or a timeout has occurred, capture a data point. 
 		var delta = (pdp_battery_last - battery).abs();
 		if ( (delta < 1.0) && (timeout_happened == 0) ) { return; } 
 
@@ -244,7 +245,7 @@ class BatteryBurnRateView extends WatchUi.DataField {
 		pdp_data_battery[i] = battery;
 		pdp_data_i++;
 
-		extrapolate();
+		estimate();
     }
     
    //! Display the value you computed here. This will be called
@@ -262,18 +263,20 @@ class BatteryBurnRateView extends WatchUi.DataField {
 	        label.setColor(Graphics.COLOR_BLACK);
 			dataColor = Graphics.COLOR_BLACK;
 		}
-		var burnRateIsString = currentBurnRate instanceof String;
-	    if (!(currentBurnRate instanceof String) && currentBurnRate > veryHighBurnRate) {
+
+		if ( burn_rate_slope < veryHighBurnRate ) {
 	    	dataColor = Graphics.COLOR_RED;
     	}
+
         View.findDrawableById("Background").setColor(getBackgroundColor());
+
+		// Display the data.   Check for an invalid value. 
         var value = View.findDrawableById("value");
         value.setColor(dataColor);
-        if (!(currentBurnRate instanceof String)) {
-			var burnRateString = currentBurnRate.format("%.1f") + "%";
-	        value.setText(burnRateString);
+        if (  burn_rate_slope != burn_rate_invalid ) {
+	        value.setText(burn_rate_slope.format("%.1f") + "%");
         } else {
-        	value.setText(currentBurnRate);
+        	value.setText(burn_rate_text);
     	}
         View.onUpdate(dc);
 	}    
