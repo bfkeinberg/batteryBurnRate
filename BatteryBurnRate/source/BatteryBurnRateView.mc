@@ -7,9 +7,13 @@ using Toybox.Time;
 
 class BatteryBurnRateView extends WatchUi.DataField {
 
+	// --------------------------------------------------------------
+	// Debug Control - Also triggers Printlns.
+	const do_simulate = 0; // The time code is broken in sim.   Fake it.
+
+
 	// Algorithm, v2.   Capture primary data points every 
 	// time the battery charge changes more than 1%  
-	const do_simulate = 1; // The time code is broken in sim.   Fake it.
 	var   sim_ut;
 	
 	// Primary data point collection.
@@ -27,7 +31,6 @@ class BatteryBurnRateView extends WatchUi.DataField {
 
 	hidden var burn_rate_slope;            // Burn rate as a slope. 
 	const      burn_rate_invalid = 1000.0; // A Magic Value  
-	hidden var burn_rate_text;             // Human-readable. 
 
 	// TUNABLES 
 	// Make the display red if burn rate exceeds 12%/h 
@@ -58,7 +61,6 @@ class BatteryBurnRateView extends WatchUi.DataField {
 		pdp_battery_last = 200.0; // Set this to an invalid value so that it triggers immediately.
 
 		burn_rate_slope = 0.0;
-		burn_rate_text  = "";
 
         startingTimeInMs = System.getTimer();
         lastBurnRate = 0;
@@ -117,7 +119,6 @@ class BatteryBurnRateView extends WatchUi.DataField {
 		if ( pdp_data_i < 2 ) {
 			// TODO: Put some code here to generate a message. 
 			burn_rate_slope = burn_rate_invalid;
-			burn_rate_text  = "...";
 			return;
 			}
 
@@ -130,7 +131,7 @@ class BatteryBurnRateView extends WatchUi.DataField {
 		var fitsize = pdp_data_i;
 		if ( fitsize > pdp_data_points ) { fitsize = pdp_data_points; }
 
-		System.print("Extrapolate: ");
+		if ( do_simulate ) { System.print("Estimate: "); }
 		// Make a snapstop of the real data and align it + normalize to hours.
 		// Recall that the data buffer pointer is always pointing to the oldest item in the ring. 
 		var data_x       = new [ pdp_data_points ];
@@ -174,7 +175,7 @@ class BatteryBurnRateView extends WatchUi.DataField {
 		}
 
 		// The input unit is already in percent. 
-		System.println("Pct/H: " + slope.format("%.1f") );
+		if ( do_simulate ) {  System.println("Pct/H: " + slope.format("%.1f") ); }
 		burn_rate_slope = slope; 
 	}
 
@@ -231,7 +232,9 @@ class BatteryBurnRateView extends WatchUi.DataField {
 
 		pdp_battery_last = battery;
 
-		System.println("Sample PDP Add " + pdp_data_i + " " + battery ); 
+		if ( do_simulate ) { 
+			System.println("Sample PDP Add " + pdp_data_i + " " + battery ); 
+		}
 
 		var now_ut = new Time.Moment(Time.today().value()); 
 		var i      = pdp_data_i & 0xF;
@@ -253,11 +256,10 @@ class BatteryBurnRateView extends WatchUi.DataField {
     function onUpdate(dc)
     {
 	    var dataColor;
-
-    
         var label = View.findDrawableById("label");
 
-		// Reverse the colors for day/night.
+		// Reverse the colors for day/night and set the default 
+		// value for the color of the data color. 
 	    if (getBackgroundColor() == Graphics.COLOR_BLACK) {
 	        label.setColor(Graphics.COLOR_WHITE);
 			dataColor = Graphics.COLOR_WHITE;
@@ -272,19 +274,26 @@ class BatteryBurnRateView extends WatchUi.DataField {
 	        label.setText("Charge/h");
 		} else { 
 		    label.setText("Burn/h");
-			if ( burn_rate_slope < veryHighBurnRate ) {
-		    	dataColor = Graphics.COLOR_RED;
 			}
 		}
 
-		// Display the data.   Check for an invalid value. 
+		// Check for pathology and set the color if need be. 
+		if ( burn_rate_slope < veryHighBurnRate ) {
+		    dataColor = Graphics.COLOR_RED;
+		}
+
+		// Display the data.  If its an invalid value, render as dots. 
         var value = View.findDrawableById("value");
-        value.setColor(dataColor);
         if (  burn_rate_slope != burn_rate_invalid ) {
 	        value.setText(burn_rate_slope.format("%.1f") + "%");
         } else {
-        	value.setText(burn_rate_text);
+        	value.setText("...");
     	}
+
+		// Done with Formatting, choose the color.
+        value.setColor(dataColor);
+
+
         View.onUpdate(dc);
 	}    
 
