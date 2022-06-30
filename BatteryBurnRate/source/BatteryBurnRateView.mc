@@ -6,8 +6,8 @@ using Toybox.AntPlus;
 using Toybox.Time;
 
 // Notes.    
-// Functional, w/ Old code:  Code 5109 bytes, Data 1790 bytes.
-
+// Functional, w/ Old code:      Code 5109 bytes, Data 1790 bytes.
+// Functional  removed old code: Code 4110 bytes, Data 1451 bytes.
 
 class BatteryBurnRateView extends WatchUi.DataField {
 
