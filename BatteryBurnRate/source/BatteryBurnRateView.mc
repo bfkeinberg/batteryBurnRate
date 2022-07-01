@@ -141,7 +141,7 @@ class BatteryBurnRateView extends WatchUi.DataField {
     		}
 
 			var num   = fitsize * sum_xy - sum_x * sum_y; 
-			var denom = fitsize * sum_xx - sum_xx; 
+			var denom = fitsize * sum_xx - sum_x * sum_x; 
 
 			// Check for divide by zero.
 			if ( denom != 0.0 ) { slope = num / denom; }
