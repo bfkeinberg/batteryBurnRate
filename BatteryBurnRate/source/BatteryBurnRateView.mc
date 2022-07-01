@@ -11,15 +11,9 @@ using Toybox.Time;
 
 class BatteryBurnRateView extends WatchUi.DataField {
 
-	// --------------------------------------------------------------
-	// Debug Control - Also triggers Printlns.
-	const do_simulate = 0; // The time code is broken in sim.   Fake it.
-
-
 	// Algorithm, v2.   Capture primary data points every 
 	// time the battery charge changes more than 1%  
-	var   sim_ut;
-	
+
 	// Primary data point collection.
 	const      pdp_data_points    = 16;          // This make masks easy.
 
@@ -54,7 +48,7 @@ class BatteryBurnRateView extends WatchUi.DataField {
 
 		burn_rate_slope = 0.0;
 
-		sim_ut = 0; 
+		System.println("BatteryBurnRate Started"); 
     }
 
     // Set your layout here. Anytime the size of obscurity of
@@ -92,11 +86,12 @@ class BatteryBurnRateView extends WatchUi.DataField {
     }
 
 	// Calculate the least squares fit of the data. 
-    function estimate() {
+    function update_estimate() {
 
 		// If there isn't enough data, stop now. 
 		if ( pdp_data_i < 2 ) {
 			// TODO: Put some code here to generate a message. 
+			System.println("Too Soon to estimate()");
 			burn_rate_slope = burn_rate_invalid;
 			return;
 			}
@@ -110,7 +105,7 @@ class BatteryBurnRateView extends WatchUi.DataField {
 		var fitsize = pdp_data_i;
 		if ( fitsize > pdp_data_points ) { fitsize = pdp_data_points; }
 
-		if ( do_simulate ) { System.print("Estimate: "); }
+		System.print("Estimate: "); 
 		// Make a snapstop of the real data and align it + normalize to hours.
 		// Recall that the data buffer pointer is always pointing to the oldest item in the ring. 
 		var data_x       = new [ pdp_data_points ];
@@ -154,7 +149,7 @@ class BatteryBurnRateView extends WatchUi.DataField {
 		}
 
 		// The input unit is already in percent. 
-		if ( do_simulate ) {  System.println("Pct/H: " + slope.format("%.1f") ); }
+		System.println("Pct/H: " + slope.format("%.1f") );
 		burn_rate_slope = slope; 
 	}
 
@@ -172,9 +167,6 @@ class BatteryBurnRateView extends WatchUi.DataField {
 
     function compute(info) {
 
-		// The simulator is broken.   Generate time.
-		if ( do_simulate == 1 ) { sim_ut++; } 
-
 		// Update the timeout. 
 		var timeout_happened; 
 		{
@@ -187,7 +179,7 @@ class BatteryBurnRateView extends WatchUi.DataField {
 			if ( pdp_sample_timeout_ms  < 0 ) {
 				timeout_happened = 1;
 				pdp_sample_timeout_ms += pdp_sample_timeout_tunable;
-				System.println("Sampling Timeout"); 
+				// System.println("Sampling Timeout"); 
  			}
 			else { timeout_happened = 0; }
 		} 
@@ -207,23 +199,21 @@ class BatteryBurnRateView extends WatchUi.DataField {
 
 		pdp_battery_last = battery;
 
-		if ( do_simulate ) { 
-			System.println("Sample PDP Add " + pdp_data_i + " " + battery ); 
-		}
-
-		var now_ut = new Time.Moment(Time.today().value()); 
 		var i      = pdp_data_i & 0xF;
 
-		if ( do_simulate == 1 ) {
-			pdp_data_time_ut[i] = sim_ut; 
+		pdp_data_time_ut[i] =  Time.now().value();
+
+		// Do these with larger operations to lower logging overhead.
+		if ( timeout_happened ) {
+			System.println("Timeout PDP " + pdp_data_i + "," + pdp_data_time_ut[i] + "," + battery); 
 		} else {
-			pdp_data_time_ut[i] = now_ut.value();
-			}	
+			System.println("Sample  PDP " + pdp_data_i + "," + pdp_data_time_ut[i] + "," + battery); 
+		}
 
 		pdp_data_battery[i] = battery;
 		pdp_data_i++;
 
-		estimate();
+		update_estimate();
     }
     
    //! Display the value you computed here. This will be called
