@@ -91,7 +91,7 @@ class BatteryBurnRateView extends WatchUi.DataField {
 		// If there isn't enough data, stop now. 
 		if ( pdp_data_i < 2 ) {
 			// TODO: Put some code here to generate a message. 
-			System.println("Too Soon to estimate()");
+			System.println("# Too Soon to estimate()");
 			burn_rate_slope = burn_rate_invalid;
 			return;
 			}
@@ -149,7 +149,7 @@ class BatteryBurnRateView extends WatchUi.DataField {
 		}
 
 		// The input unit is already in percent. 
-		System.println("Pct/H: " + slope.format("%.1f") );
+		System.println("extrapolate," + slope.format("%.1f") );
 		burn_rate_slope = slope; 
 	}
 
@@ -207,9 +207,9 @@ class BatteryBurnRateView extends WatchUi.DataField {
 
 		// Do these with larger operations to lower logging overhead.
 		if ( timeout_happened ) {
-			System.println("Timeout PDP " + pdp_data_i + "," + pdp_data_time_ut[i] + "," + battery); 
+			System.println(pdp_data_i + "," + pdp_data_time_ut[i] + "," + battery + ",to"); 
 		} else {
-			System.println("Sample  PDP " + pdp_data_i + "," + pdp_data_time_ut[i] + "," + battery); 
+			System.println(pdp_data_i + "," + pdp_data_time_ut[i] + "," + battery ); 
 		}
 
 		pdp_data_battery[i] = battery;
