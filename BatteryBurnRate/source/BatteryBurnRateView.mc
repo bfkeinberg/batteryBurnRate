@@ -194,8 +194,10 @@ class BatteryBurnRateView extends WatchUi.DataField {
 
 		// If the value of the battery percentage has changed more than 
 		// 1%, or a timeout has occurred, capture a data point. 
-		var delta = (pdp_battery_last - battery).abs();
-		if ( (delta < 1.0) && (timeout_happened == 0) ) { return; } 
+		// var delta = (pdp_battery_last - battery).abs();
+		// if ( (delta < 1.0) && (timeout_happened == 0) ) { return; } 
+
+		if ( pdp_battery_last ==  battery ) { return; } 
 
 		pdp_battery_last = battery;
 
