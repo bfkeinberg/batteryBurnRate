@@ -15,7 +15,8 @@ class BatteryBurnRateView extends WatchUi.DataField {
 	// time the battery charge changes more than 1%  
 
 	// Primary data point collection.
-	const      pdp_data_points    = 16;          // This make masks easy.
+	const      pdp_data_points    = 16;              // This make masks easy.   ATTN! Must be 2^N
+	const      pdp_data_mask = pdp_data_points - 1;  
 
 	const      pdp_sample_timeout_tunable = 300*1000; // Capture a data point if no change...
 	var        pdp_sample_timeout_ms;                 // The countdown variable.
@@ -112,12 +113,12 @@ class BatteryBurnRateView extends WatchUi.DataField {
 		var data_y       = new [ pdp_data_points ];
 
 		{
-			var t0 = pdp_data_time_ut[data_offset & 0xf];
+			var t0 = pdp_data_time_ut[data_offset & pdp_data_mask];
 
 			// Convert from seconds to hours...
 
 			for (var i=0; i < fitsize; i++) {
-				var adj_i = (i + data_offset) & 0xf; 
+				var adj_i = (i + data_offset) & pdp_data_mask; 
 
 				var ut = pdp_data_time_ut[adj_i];
 
@@ -201,7 +202,7 @@ class BatteryBurnRateView extends WatchUi.DataField {
 
 		pdp_battery_last = battery;
 
-		var i      = pdp_data_i & 0xF;
+		var i      = pdp_data_i & pdp_data_mask;
 
 		pdp_data_time_ut[i] =  Time.now().value();
 
