@@ -1,0 +1,414 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<debugInfo>
+<manifest filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/manifest.xml"/>
+<pcToLineNum>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateBackground.mc" id="1" lineNum="9" parent="globals/Background" pc="268435456" symbol="initialize"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateBackground.mc" id="1" lineNum="10" parent="globals/Background" pc="268435460" symbol="initialize"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateBackground.mc" id="1" lineNum="14" parent="globals/Background" pc="268435481" symbol="initialize"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateBackground.mc" id="2" lineNum="17" parent="globals/Background" pc="268435502" symbol="setColor"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateBackground.mc" id="2" lineNum="18" parent="globals/Background" pc="268435506" symbol="setColor"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateBackground.mc" id="3" lineNum="21" parent="globals/Background" pc="268435517" symbol="draw"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateBackground.mc" id="3" lineNum="22" parent="globals/Background" pc="268435521" symbol="draw"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateBackground.mc" id="3" lineNum="23" parent="globals/Background" pc="268435553" symbol="draw"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateBackground.mc" id="4" lineNum="5" parent="globals/Background" pc="268439399" symbol="&lt;init&gt;"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateBackground.mc" id="4" lineNum="5" parent="globals/Background" pc="268439399" symbol="&lt;init&gt;"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="6" lineNum="42" parent="globals/BatteryBurnRateView" pc="268435566" symbol="initialize"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="6" lineNum="43" parent="globals/BatteryBurnRateView" pc="268435570" symbol="initialize"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="6" lineNum="45" parent="globals/BatteryBurnRateView" pc="268435588" symbol="initialize"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="6" lineNum="46" parent="globals/BatteryBurnRateView" pc="268435601" symbol="initialize"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="6" lineNum="47" parent="globals/BatteryBurnRateView" pc="268435624" symbol="initialize"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="6" lineNum="49" parent="globals/BatteryBurnRateView" pc="268435646" symbol="initialize"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="6" lineNum="50" parent="globals/BatteryBurnRateView" pc="268435663" symbol="initialize"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="6" lineNum="51" parent="globals/BatteryBurnRateView" pc="268435680" symbol="initialize"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="6" lineNum="53" parent="globals/BatteryBurnRateView" pc="268435693" symbol="initialize"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="6" lineNum="55" parent="globals/BatteryBurnRateView" pc="268435706" symbol="initialize"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="7" lineNum="60" parent="globals/BatteryBurnRateView" pc="268435728" symbol="onLayout"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="7" lineNum="61" parent="globals/BatteryBurnRateView" pc="268435732" symbol="onLayout"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="7" lineNum="64" parent="globals/BatteryBurnRateView" pc="268435751" symbol="onLayout"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="7" lineNum="65" parent="globals/BatteryBurnRateView" pc="268435774" symbol="onLayout"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="7" lineNum="68" parent="globals/BatteryBurnRateView" pc="268435820" symbol="onLayout"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="7" lineNum="69" parent="globals/BatteryBurnRateView" pc="268435843" symbol="onLayout"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="7" lineNum="72" parent="globals/BatteryBurnRateView" pc="268435889" symbol="onLayout"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="7" lineNum="73" parent="globals/BatteryBurnRateView" pc="268435912" symbol="onLayout"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="7" lineNum="76" parent="globals/BatteryBurnRateView" pc="268435958" symbol="onLayout"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="7" lineNum="77" parent="globals/BatteryBurnRateView" pc="268435981" symbol="onLayout"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="7" lineNum="81" parent="globals/BatteryBurnRateView" pc="268436027" symbol="onLayout"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="7" lineNum="82" parent="globals/BatteryBurnRateView" pc="268436070" symbol="onLayout"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="7" lineNum="83" parent="globals/BatteryBurnRateView" pc="268436094" symbol="onLayout"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="7" lineNum="84" parent="globals/BatteryBurnRateView" pc="268436116" symbol="onLayout"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="7" lineNum="85" parent="globals/BatteryBurnRateView" pc="268436140" symbol="onLayout"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="7" lineNum="88" parent="globals/BatteryBurnRateView" pc="268436162" symbol="onLayout"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="7" lineNum="89" parent="globals/BatteryBurnRateView" pc="268436214" symbol="onLayout"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="8" lineNum="93" parent="globals/BatteryBurnRateView" pc="268436218" symbol="update_estimate"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="8" lineNum="96" parent="globals/BatteryBurnRateView" pc="268436222" symbol="update_estimate"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="8" lineNum="98" parent="globals/BatteryBurnRateView" pc="268436239" symbol="update_estimate"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="8" lineNum="99" parent="globals/BatteryBurnRateView" pc="268436260" symbol="update_estimate"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="8" lineNum="100" parent="globals/BatteryBurnRateView" pc="268436276" symbol="update_estimate"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="8" lineNum="104" parent="globals/BatteryBurnRateView" pc="268436280" symbol="update_estimate"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="8" lineNum="107" parent="globals/BatteryBurnRateView" pc="268436290" symbol="update_estimate"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="8" lineNum="107" parent="globals/BatteryBurnRateView" pc="268436304" symbol="update_estimate"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="8" lineNum="109" parent="globals/BatteryBurnRateView" pc="268436314" symbol="update_estimate"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="8" lineNum="110" parent="globals/BatteryBurnRateView" pc="268436324" symbol="update_estimate"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="8" lineNum="110" parent="globals/BatteryBurnRateView" pc="268436338" symbol="update_estimate"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="8" lineNum="114" parent="globals/BatteryBurnRateView" pc="268436351" symbol="update_estimate"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="8" lineNum="115" parent="globals/BatteryBurnRateView" pc="268436362" symbol="update_estimate"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="8" lineNum="118" parent="globals/BatteryBurnRateView" pc="268436373" symbol="update_estimate"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="8" lineNum="122" parent="globals/BatteryBurnRateView" pc="268436395" symbol="update_estimate"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="8" lineNum="123" parent="globals/BatteryBurnRateView" pc="268436410" symbol="update_estimate"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="8" lineNum="125" parent="globals/BatteryBurnRateView" pc="268436426" symbol="update_estimate"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="8" lineNum="128" parent="globals/BatteryBurnRateView" pc="268436439" symbol="update_estimate"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="8" lineNum="129" parent="globals/BatteryBurnRateView" pc="268436455" symbol="update_estimate"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="8" lineNum="135" parent="globals/BatteryBurnRateView" pc="268436484" symbol="update_estimate"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="8" lineNum="137" parent="globals/BatteryBurnRateView" pc="268436484" symbol="update_estimate"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="8" lineNum="138" parent="globals/BatteryBurnRateView" pc="268436484" symbol="update_estimate"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="8" lineNum="138" parent="globals/BatteryBurnRateView" pc="268436491" symbol="update_estimate"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="8" lineNum="138" parent="globals/BatteryBurnRateView" pc="268436498" symbol="update_estimate"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="8" lineNum="138" parent="globals/BatteryBurnRateView" pc="268436505" symbol="update_estimate"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="8" lineNum="139" parent="globals/BatteryBurnRateView" pc="268436512" symbol="update_estimate"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="8" lineNum="140" parent="globals/BatteryBurnRateView" pc="268436527" symbol="update_estimate"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="8" lineNum="141" parent="globals/BatteryBurnRateView" pc="268436537" symbol="update_estimate"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="8" lineNum="142" parent="globals/BatteryBurnRateView" pc="268436547" symbol="update_estimate"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="8" lineNum="143" parent="globals/BatteryBurnRateView" pc="268436563" symbol="update_estimate"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="8" lineNum="146" parent="globals/BatteryBurnRateView" pc="268436592" symbol="update_estimate"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="8" lineNum="147" parent="globals/BatteryBurnRateView" pc="268436605" symbol="update_estimate"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="8" lineNum="150" parent="globals/BatteryBurnRateView" pc="268436618" symbol="update_estimate"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="8" lineNum="150" parent="globals/BatteryBurnRateView" pc="268436629" symbol="update_estimate"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="8" lineNum="151" parent="globals/BatteryBurnRateView" pc="268436639" symbol="update_estimate"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="8" lineNum="155" parent="globals/BatteryBurnRateView" pc="268436646" symbol="update_estimate"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="8" lineNum="156" parent="globals/BatteryBurnRateView" pc="268436684" symbol="update_estimate"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="9" lineNum="172" parent="globals/BatteryBurnRateView" pc="268436695" symbol="compute"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="9" lineNum="175" parent="globals/BatteryBurnRateView" pc="268436699" symbol="compute"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="9" lineNum="177" parent="globals/BatteryBurnRateView" pc="268436699" symbol="compute"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="9" lineNum="178" parent="globals/BatteryBurnRateView" pc="268436716" symbol="compute"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="9" lineNum="179" parent="globals/BatteryBurnRateView" pc="268436729" symbol="compute"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="9" lineNum="181" parent="globals/BatteryBurnRateView" pc="268436739" symbol="compute"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="9" lineNum="183" parent="globals/BatteryBurnRateView" pc="268436755" symbol="compute"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="9" lineNum="184" parent="globals/BatteryBurnRateView" pc="268436772" symbol="compute"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="9" lineNum="185" parent="globals/BatteryBurnRateView" pc="268436779" symbol="compute"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="9" lineNum="188" parent="globals/BatteryBurnRateView" pc="268436804" symbol="compute"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="9" lineNum="196" parent="globals/BatteryBurnRateView" pc="268436811" symbol="compute"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="9" lineNum="197" parent="globals/BatteryBurnRateView" pc="268436828" symbol="compute"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="9" lineNum="198" parent="globals/BatteryBurnRateView" pc="268436849" symbol="compute"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="9" lineNum="198" parent="globals/BatteryBurnRateView" pc="268436856" symbol="compute"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="9" lineNum="206" parent="globals/BatteryBurnRateView" pc="268436860" symbol="compute"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="9" lineNum="206" parent="globals/BatteryBurnRateView" pc="268436888" symbol="compute"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="9" lineNum="208" parent="globals/BatteryBurnRateView" pc="268436892" symbol="compute"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="9" lineNum="210" parent="globals/BatteryBurnRateView" pc="268436902" symbol="compute"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="9" lineNum="212" parent="globals/BatteryBurnRateView" pc="268436921" symbol="compute"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="9" lineNum="215" parent="globals/BatteryBurnRateView" pc="268436956" symbol="compute"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="9" lineNum="216" parent="globals/BatteryBurnRateView" pc="268436961" symbol="compute"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="9" lineNum="218" parent="globals/BatteryBurnRateView" pc="268437021" symbol="compute"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="9" lineNum="221" parent="globals/BatteryBurnRateView" pc="268437072" symbol="compute"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="9" lineNum="222" parent="globals/BatteryBurnRateView" pc="268437085" symbol="compute"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="9" lineNum="224" parent="globals/BatteryBurnRateView" pc="268437104" symbol="compute"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="10" lineNum="229" parent="globals/BatteryBurnRateView" pc="268437117" symbol="onUpdate"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="10" lineNum="230" parent="globals/BatteryBurnRateView" pc="268437121" symbol="onUpdate"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="10" lineNum="231" parent="globals/BatteryBurnRateView" pc="268437121" symbol="onUpdate"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="10" lineNum="235" parent="globals/BatteryBurnRateView" pc="268437145" symbol="onUpdate"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="10" lineNum="236" parent="globals/BatteryBurnRateView" pc="268437172" symbol="onUpdate"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="10" lineNum="237" parent="globals/BatteryBurnRateView" pc="268437196" symbol="onUpdate"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="10" lineNum="239" parent="globals/BatteryBurnRateView" pc="268437213" symbol="onUpdate"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="10" lineNum="240" parent="globals/BatteryBurnRateView" pc="268437237" symbol="onUpdate"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="10" lineNum="242" parent="globals/BatteryBurnRateView" pc="268437251" symbol="onUpdate"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="10" lineNum="245" parent="globals/BatteryBurnRateView" pc="268437294" symbol="onUpdate"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="10" lineNum="246" parent="globals/BatteryBurnRateView" pc="268437311" symbol="onUpdate"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="10" lineNum="248" parent="globals/BatteryBurnRateView" pc="268437331" symbol="onUpdate"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="10" lineNum="252" parent="globals/BatteryBurnRateView" pc="268437348" symbol="onUpdate"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="10" lineNum="253" parent="globals/BatteryBurnRateView" pc="268437368" symbol="onUpdate"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="10" lineNum="257" parent="globals/BatteryBurnRateView" pc="268437385" symbol="onUpdate"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="10" lineNum="258" parent="globals/BatteryBurnRateView" pc="268437409" symbol="onUpdate"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="10" lineNum="259" parent="globals/BatteryBurnRateView" pc="268437429" symbol="onUpdate"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="10" lineNum="260" parent="globals/BatteryBurnRateView" pc="268437448" symbol="onUpdate"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="10" lineNum="262" parent="globals/BatteryBurnRateView" pc="268437485" symbol="onUpdate"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="10" lineNum="266" parent="globals/BatteryBurnRateView" pc="268437502" symbol="onUpdate"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="10" lineNum="268" parent="globals/BatteryBurnRateView" pc="268437516" symbol="onUpdate"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="11" lineNum="12" parent="globals/BatteryBurnRateView" pc="268439448" symbol="&lt;init&gt;"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="11" lineNum="21" parent="globals/BatteryBurnRateView" pc="268439466" symbol="&lt;init&gt;"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateView.mc" id="11" lineNum="12" parent="globals/BatteryBurnRateView" pc="268439448" symbol="&lt;init&gt;"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateApp.mc" id="13" lineNum="5" parent="globals/BatteryBurnRateApp" pc="268437537" symbol="initialize"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateApp.mc" id="13" lineNum="6" parent="globals/BatteryBurnRateApp" pc="268437541" symbol="initialize"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateApp.mc" id="14" lineNum="10" parent="globals/BatteryBurnRateApp" pc="268437560" symbol="onStart"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateApp.mc" id="15" lineNum="14" parent="globals/BatteryBurnRateApp" pc="268437565" symbol="onStop"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateApp.mc" id="16" lineNum="18" parent="globals/BatteryBurnRateApp" pc="268437570" symbol="getInitialView"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateApp.mc" id="16" lineNum="19" parent="globals/BatteryBurnRateApp" pc="268437574" symbol="getInitialView"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateApp.mc" id="17" lineNum="3" parent="globals/BatteryBurnRateApp" pc="268439489" symbol="&lt;init&gt;"/>
+<entry filename="/Users/robert/projects/batteryBurnRate/BatteryBurnRate/source/BatteryBurnRateApp.mc" id="17" lineNum="3" parent="globals/BatteryBurnRateApp" pc="268439489" symbol="&lt;init&gt;"/>
+<entry filename="Rez" id="19" lineNum="2" parent="globals/Rez/Drawables" pc="268439442" symbol="&lt;init&gt;"/>
+<entry filename="Rez" id="20" lineNum="6" parent="globals/Rez/Fonts" pc="268439444" symbol="&lt;init&gt;"/>
+<entry filename="Rez" id="21" lineNum="8" parent="globals/Rez/JsonData" pc="268439446" symbol="&lt;init&gt;"/>
+<entry filename="Rez" id="22" lineNum="17" parent="globals/Rez/Layouts" pc="268437612" symbol="MainLayout"/>
+<entry filename="Rez" id="22" lineNum="19" parent="globals/Rez/Layouts" pc="268437624" symbol="MainLayout"/>
+<entry filename="Rez" id="22" lineNum="20" parent="globals/Rez/Layouts" pc="268437637" symbol="MainLayout"/>
+<entry filename="Rez" id="22" lineNum="22" parent="globals/Rez/Layouts" pc="268437650" symbol="MainLayout"/>
+<entry filename="Rez" id="22" lineNum="23" parent="globals/Rez/Layouts" pc="268437674" symbol="MainLayout"/>
+<entry filename="Rez" id="22" lineNum="24" parent="globals/Rez/Layouts" pc="268437837" symbol="MainLayout"/>
+<entry filename="Rez" id="22" lineNum="26" parent="globals/Rez/Layouts" pc="268438000" symbol="MainLayout"/>
+<entry filename="Rez" id="23" lineNum="35" parent="globals/Rez/Layouts" pc="268438038" symbol="TopLeftLayout"/>
+<entry filename="Rez" id="23" lineNum="38" parent="globals/Rez/Layouts" pc="268438050" symbol="TopLeftLayout"/>
+<entry filename="Rez" id="23" lineNum="39" parent="globals/Rez/Layouts" pc="268438074" symbol="TopLeftLayout"/>
+<entry filename="Rez" id="23" lineNum="40" parent="globals/Rez/Layouts" pc="268438207" symbol="TopLeftLayout"/>
+<entry filename="Rez" id="23" lineNum="42" parent="globals/Rez/Layouts" pc="268438340" symbol="TopLeftLayout"/>
+<entry filename="Rez" id="24" lineNum="51" parent="globals/Rez/Layouts" pc="268438378" symbol="TopRightLayout"/>
+<entry filename="Rez" id="24" lineNum="54" parent="globals/Rez/Layouts" pc="268438390" symbol="TopRightLayout"/>
+<entry filename="Rez" id="24" lineNum="55" parent="globals/Rez/Layouts" pc="268438414" symbol="TopRightLayout"/>
+<entry filename="Rez" id="24" lineNum="56" parent="globals/Rez/Layouts" pc="268438547" symbol="TopRightLayout"/>
+<entry filename="Rez" id="24" lineNum="58" parent="globals/Rez/Layouts" pc="268438680" symbol="TopRightLayout"/>
+<entry filename="Rez" id="25" lineNum="67" parent="globals/Rez/Layouts" pc="268438718" symbol="BottomLeftLayout"/>
+<entry filename="Rez" id="25" lineNum="70" parent="globals/Rez/Layouts" pc="268438730" symbol="BottomLeftLayout"/>
+<entry filename="Rez" id="25" lineNum="71" parent="globals/Rez/Layouts" pc="268438754" symbol="BottomLeftLayout"/>
+<entry filename="Rez" id="25" lineNum="72" parent="globals/Rez/Layouts" pc="268438887" symbol="BottomLeftLayout"/>
+<entry filename="Rez" id="25" lineNum="74" parent="globals/Rez/Layouts" pc="268439020" symbol="BottomLeftLayout"/>
+<entry filename="Rez" id="26" lineNum="83" parent="globals/Rez/Layouts" pc="268439058" symbol="BottomRightLayout"/>
+<entry filename="Rez" id="26" lineNum="86" parent="globals/Rez/Layouts" pc="268439070" symbol="BottomRightLayout"/>
+<entry filename="Rez" id="26" lineNum="87" parent="globals/Rez/Layouts" pc="268439094" symbol="BottomRightLayout"/>
+<entry filename="Rez" id="26" lineNum="88" parent="globals/Rez/Layouts" pc="268439227" symbol="BottomRightLayout"/>
+<entry filename="Rez" id="26" lineNum="90" parent="globals/Rez/Layouts" pc="268439360" symbol="BottomRightLayout"/>
+<entry filename="Rez" id="27" lineNum="10" parent="globals/Rez/Layouts" pc="268439445" symbol="&lt;init&gt;"/>
+<entry filename="Rez" id="28" lineNum="95" parent="globals/Rez/Menus" pc="268439443" symbol="&lt;init&gt;"/>
+<entry filename="Rez" id="29" lineNum="97" parent="globals/Rez/Strings" pc="268439447" symbol="&lt;init&gt;"/>
+<entry filename="Rez" id="30" lineNum="1" parent="globals/Rez" pc="268439418" symbol="&lt;init&gt;"/>
+<entry filename="Rez" id="30" lineNum="1" parent="globals/Rez" pc="268439418" symbol="&lt;init&gt;"/>
+</pcToLineNum>
+<symbolTable>
+<entry id="8388639" module="true" symbol="Graphics"/>
+<entry id="8388632" method="true" symbol="&lt;init&gt;"/>
+<entry id="4" module="true" symbol="globals/Rez/Menus"/>
+<entry id="14" method="true" symbol="MainLayout"/>
+<entry field="true" id="29" symbol="burn_rate_slope"/>
+<entry field="true" id="8388611" module="true" symbol="Toybox"/>
+<entry id="32" method="true" symbol="update_estimate"/>
+<entry id="8388649" module="true" object="true" symbol="Test"/>
+<entry field="true" id="19" symbol="AppName"/>
+<entry field="true" id="28" symbol="pdp_battery_last"/>
+<entry id="8" module="true" symbol="globals/Rez/Strings"/>
+<entry id="8388772" module="true" object="true" symbol="Fonts"/>
+<entry field="true" id="22" symbol="pdp_sample_timeout_tunable"/>
+<entry id="8388648" module="true" symbol="WatchUi"/>
+<entry field="true" id="8389138" symbol="label"/>
+<entry id="2" module="true" symbol="globals/Rez"/>
+<entry id="8389410" module="true" symbol="AntPlus"/>
+<entry id="8389124" method="true" symbol="onUpdate"/>
+<entry field="true" id="8389065" symbol="locY"/>
+<entry field="true" id="8389064" symbol="locX"/>
+<entry id="8388771" module="true" object="true" symbol="Drawables"/>
+<entry id="8389348" symbol="font"/>
+<entry id="12" module="true" symbol="Menus"/>
+<entry id="6" module="true" symbol="globals/Rez/Layouts"/>
+<entry id="8389122" method="true" symbol="onLayout"/>
+<entry field="true" id="8389063" symbol="identifier"/>
+<entry id="8389349" symbol="justification"/>
+<entry field="true" id="26" symbol="pdp_data_time_ut"/>
+<entry id="8389137" method="true" symbol="compute"/>
+<entry id="8389131" method="true" symbol="setColor"/>
+<entry id="7" module="true" symbol="globals/Rez/JsonData"/>
+<entry id="3" module="true" symbol="globals/Rez/Drawables"/>
+<entry field="true" id="31" symbol="veryHighBurnRate"/>
+<entry id="15" method="true" symbol="TopLeftLayout"/>
+<entry id="8388644" module="true" symbol="System"/>
+<entry id="8388645" module="true" symbol="Time"/>
+<entry id="8388769" module="true" object="true" symbol="Rez"/>
+<entry id="17" method="true" symbol="BottomLeftLayout"/>
+<entry id="18" method="true" symbol="BottomRightLayout"/>
+<entry id="8388640" module="true" symbol="Lang"/>
+<entry id="8390088" module="true" object="true" symbol="JsonData"/>
+<entry field="true" id="8389130" symbol="mColor"/>
+<entry id="8389068" method="true" symbol="draw"/>
+<entry field="true" id="13" symbol="LauncherIcon"/>
+<entry id="8388610" symbol="statics"/>
+<entry id="9" object="true" symbol="BatteryBurnRateView"/>
+<entry id="8389350" module="true" symbol="globals"/>
+<entry field="true" id="30" symbol="burn_rate_invalid"/>
+<entry id="8388770" module="true" object="true" symbol="Strings"/>
+<entry id="8390146" module="true" object="true" symbol="Background"/>
+<entry id="8388702" method="true" symbol="initialize"/>
+<entry id="8389279" method="true" symbol="onStart"/>
+<entry field="true" id="23" symbol="pdp_sample_timeout_ms"/>
+<entry id="8389280" method="true" symbol="getInitialView"/>
+<entry field="true" id="24" symbol="pdp_sample_time_last_ms"/>
+<entry id="8389281" method="true" symbol="onStop"/>
+<entry id="8389347" symbol="color"/>
+<entry id="11" module="true" symbol="Layouts"/>
+<entry field="true" id="25" symbol="pdp_data_battery"/>
+<entry field="true" id="27" symbol="pdp_data_i"/>
+<entry field="true" id="20" symbol="pdp_data_points"/>
+<entry id="5" module="true" symbol="globals/Rez/Fonts"/>
+<entry field="true" id="21" symbol="pdp_data_mask"/>
+<entry id="10" object="true" symbol="BatteryBurnRateApp"/>
+<entry id="8388635" module="true" symbol="Application"/>
+<entry id="16" method="true" symbol="TopRightLayout"/>
+</symbolTable>
+<localVars>
+<entry endPc="268435500" name="dictionary" stackId="1" startPc="268435460"/>
+<entry arg="true" endPc="268435516" name="color" stackId="1" startPc="268435502"/>
+<entry arg="true" endPc="268435565" name="dc" stackId="1" startPc="268435517"/>
+<entry endPc="268436161" name="valueView" stackId="4" startPc="268436027"/>
+<entry endPc="268436161" name="labelView" stackId="3" startPc="268436027"/>
+<entry endPc="268436216" name="obscurityFlags" stackId="2" startPc="268435732"/>
+<entry arg="true" endPc="268436217" name="dc" stackId="1" startPc="268435728"/>
+<entry endPc="268436470" name="ut" stackId="8" startPc="268436410"/>
+<entry endPc="268436470" name="adj_i" stackId="7" startPc="268436410"/>
+<entry endPc="268436483" name="i" stackId="6" startPc="268436410"/>
+<entry endPc="268436483" name="t0" stackId="5" startPc="268436373"/>
+<entry endPc="268436591" name="i" stackId="14" startPc="268436527"/>
+<entry endPc="268436645" name="sum_xy" stackId="13" startPc="268436484"/>
+<entry endPc="268436645" name="sum_xx" stackId="12" startPc="268436484"/>
+<entry endPc="268436645" name="denom" stackId="16" startPc="268436484"/>
+<entry endPc="268436645" name="num" stackId="15" startPc="268436484"/>
+<entry endPc="268436645" name="sum_y" stackId="11" startPc="268436484"/>
+<entry endPc="268436645" name="sum_x" stackId="10" startPc="268436484"/>
+<entry endPc="268436693" name="slope" stackId="9" startPc="268436222"/>
+<entry endPc="268436693" name="data_offset" stackId="1" startPc="268436222"/>
+<entry endPc="268436693" name="data_y" stackId="4" startPc="268436222"/>
+<entry endPc="268436693" name="data_x" stackId="3" startPc="268436222"/>
+<entry endPc="268436693" name="fitsize" stackId="2" startPc="268436222"/>
+<entry endPc="268436810" name="now" stackId="3" startPc="268436699"/>
+<entry endPc="268436810" name="duration" stackId="4" startPc="268436699"/>
+<entry endPc="268437115" name="battery" stackId="6" startPc="268436699"/>
+<entry endPc="268437115" name="i" stackId="7" startPc="268436699"/>
+<entry endPc="268437115" name="systemStats" stackId="5" startPc="268436699"/>
+<entry endPc="268437115" name="timeout_happened" stackId="2" startPc="268436699"/>
+<entry arg="true" endPc="268437116" name="info" stackId="1" startPc="268436695"/>
+<entry endPc="268437481" name="abs_d" stackId="5" startPc="268437429"/>
+<entry endPc="268437535" name="label" stackId="3" startPc="268437121"/>
+<entry endPc="268437535" name="dataColor" stackId="2" startPc="268437121"/>
+<entry endPc="268437535" name="value" stackId="4" startPc="268437121"/>
+<entry arg="true" endPc="268437536" name="dc" stackId="1" startPc="268437117"/>
+<entry arg="true" endPc="268437564" name="state" stackId="1" startPc="268437560"/>
+<entry arg="true" endPc="268437569" name="state" stackId="1" startPc="268437565"/>
+<entry endPc="268438036" name="rez_cmp_local_text_value" stackId="6" startPc="268437624"/>
+<entry endPc="268438036" name="rez_cmp_local_var_dc_getWidth" stackId="3" startPc="268437624"/>
+<entry endPc="268438036" name="rez_cmp_local_var_dc_getHeight" stackId="2" startPc="268437624"/>
+<entry endPc="268438036" name="rez_cmp_local_custom_drawable_10093658117840105733" stackId="4" startPc="268437624"/>
+<entry endPc="268438036" name="rez_cmp_local_text_label" stackId="5" startPc="268437624"/>
+<entry arg="true" endPc="268438037" name="dc" stackId="1" startPc="268437612"/>
+<entry endPc="268438376" name="rez_cmp_local_text_value" stackId="4" startPc="268438050"/>
+<entry endPc="268438376" name="rez_cmp_local_text_label" stackId="3" startPc="268438050"/>
+<entry endPc="268438376" name="rez_cmp_local_custom_drawable_18359544326033665219" stackId="2" startPc="268438050"/>
+<entry arg="true" endPc="268438377" name="dc" stackId="1" startPc="268438038"/>
+<entry endPc="268438716" name="rez_cmp_local_text_value" stackId="4" startPc="268438390"/>
+<entry endPc="268438716" name="rez_cmp_local_custom_drawable_17973855101353934332" stackId="2" startPc="268438390"/>
+<entry endPc="268438716" name="rez_cmp_local_text_label" stackId="3" startPc="268438390"/>
+<entry arg="true" endPc="268438717" name="dc" stackId="1" startPc="268438378"/>
+<entry endPc="268439056" name="rez_cmp_local_text_value" stackId="4" startPc="268438730"/>
+<entry endPc="268439056" name="rez_cmp_local_text_label" stackId="3" startPc="268438730"/>
+<entry endPc="268439056" name="rez_cmp_local_custom_drawable_54891088618060833818" stackId="2" startPc="268438730"/>
+<entry arg="true" endPc="268439057" name="dc" stackId="1" startPc="268438718"/>
+<entry endPc="268439396" name="rez_cmp_local_text_value" stackId="4" startPc="268439070"/>
+<entry endPc="268439396" name="rez_cmp_local_text_label" stackId="3" startPc="268439070"/>
+<entry endPc="268439396" name="rez_cmp_local_custom_drawable_59494341110427448281" stackId="2" startPc="268439070"/>
+<entry arg="true" endPc="268439397" name="dc" stackId="1" startPc="268439058"/>
+</localVars>
+<annotations>
+<annotationEntry annotation="initialized" class="Drawables" module="globals/Rez" symbol="LauncherIcon"/>
+<annotationEntry annotation="initialized" class="Strings" module="globals/Rez" symbol="label"/>
+<annotationEntry annotation="initialized" class="Strings" module="globals/Rez" symbol="AppName"/>
+</annotations>
+<dataEntryOffsetMappings>
+<dataEntry label="globals" offset="87" parentId="" symbolId="globals" type="module"/>
+<dataEntry label="globals/Background" offset="158" parentId="globals" symbolId="Background" type="class"/>
+<dataEntry label="globals/Rez" offset="229" parentId="globals" symbolId="Rez" type="module"/>
+<dataEntry label="globals/Rez/Drawables" offset="308" parentId="Rez" symbolId="Drawables" type="module"/>
+<dataEntry label="globals/Rez/Menus" offset="347" parentId="Rez" symbolId="Menus" type="module"/>
+<dataEntry label="globals/Rez/Fonts" offset="378" parentId="Rez" symbolId="Fonts" type="module"/>
+<dataEntry label="globals/Rez/Layouts" offset="409" parentId="Rez" symbolId="Layouts" type="module"/>
+<dataEntry label="globals/Rez/JsonData" offset="480" parentId="Rez" symbolId="JsonData" type="module"/>
+<dataEntry label="globals/Rez/Strings" offset="511" parentId="Rez" symbolId="Strings" type="module"/>
+<dataEntry label="globals/BatteryBurnRateView" offset="558" parentId="globals" symbolId="BatteryBurnRateView" type="class"/>
+<dataEntry label="globals/BatteryBurnRateApp" offset="733" parentId="globals" symbolId="BatteryBurnRateApp" type="class"/>
+</dataEntryOffsetMappings>
+<functions>
+<functionEntry accessMode="public" endPc="268435501" name="initialize" parent="Background" startPc="268435456">
+<documentation/>
+</functionEntry>
+<functionEntry accessMode="public" endPc="268435516" name="setColor" parent="Background" startPc="268435502">
+<param id="color"/>
+<documentation/>
+</functionEntry>
+<functionEntry accessMode="public" endPc="268435565" name="draw" parent="Background" startPc="268435517">
+<param id="dc"/>
+<documentation/>
+</functionEntry>
+<functionEntry accessMode="protected" endPc="268439417" name="&lt;init&gt;" parent="Background" startPc="268439399">
+<documentation/>
+</functionEntry>
+<functionEntry accessMode="public" endPc="268435727" name="initialize" parent="BatteryBurnRateView" startPc="268435566">
+<documentation/>
+</functionEntry>
+<functionEntry accessMode="public" endPc="268436217" name="onLayout" parent="BatteryBurnRateView" startPc="268435728">
+<param id="dc"/>
+<documentation/>
+</functionEntry>
+<functionEntry accessMode="public" endPc="268436694" name="update_estimate" parent="BatteryBurnRateView" startPc="268436218">
+<documentation/>
+</functionEntry>
+<functionEntry accessMode="public" endPc="268437116" name="compute" parent="BatteryBurnRateView" startPc="268436695">
+<param id="info"/>
+<documentation/>
+</functionEntry>
+<functionEntry accessMode="public" endPc="268437536" name="onUpdate" parent="BatteryBurnRateView" startPc="268437117">
+<param id="dc"/>
+<documentation><![CDATA[<div class="description"> Display the value you computed here. This will be called<br/> once a second when the data field is visible.<br/></div>]]></documentation>
+</functionEntry>
+<functionEntry accessMode="protected" endPc="268439488" name="&lt;init&gt;" parent="BatteryBurnRateView" startPc="268439448">
+<documentation/>
+</functionEntry>
+<functionEntry accessMode="public" endPc="268437559" name="initialize" parent="BatteryBurnRateApp" startPc="268437537">
+<documentation/>
+</functionEntry>
+<functionEntry accessMode="public" endPc="268437564" name="onStart" parent="BatteryBurnRateApp" startPc="268437560">
+<param id="state"/>
+<documentation/>
+</functionEntry>
+<functionEntry accessMode="public" endPc="268437569" name="onStop" parent="BatteryBurnRateApp" startPc="268437565">
+<param id="state"/>
+<documentation/>
+</functionEntry>
+<functionEntry accessMode="public" endPc="268437611" name="getInitialView" parent="BatteryBurnRateApp" startPc="268437570">
+<documentation/>
+</functionEntry>
+<functionEntry accessMode="protected" endPc="268439507" name="&lt;init&gt;" parent="BatteryBurnRateApp" startPc="268439489">
+<documentation/>
+</functionEntry>
+<functionEntry accessMode="protected" endPc="268439442" name="&lt;init&gt;" parent="Drawables" startPc="268439442">
+<documentation/>
+</functionEntry>
+<functionEntry accessMode="protected" endPc="268439444" name="&lt;init&gt;" parent="Fonts" startPc="268439444">
+<documentation/>
+</functionEntry>
+<functionEntry accessMode="protected" endPc="268439446" name="&lt;init&gt;" parent="JsonData" startPc="268439446">
+<documentation/>
+</functionEntry>
+<functionEntry accessMode="public" endPc="268438037" name="MainLayout" parent="Layouts" startPc="268437612">
+<param id="dc"/>
+<documentation/>
+</functionEntry>
+<functionEntry accessMode="public" endPc="268438377" name="TopLeftLayout" parent="Layouts" startPc="268438038">
+<param id="dc"/>
+<documentation/>
+</functionEntry>
+<functionEntry accessMode="public" endPc="268438717" name="TopRightLayout" parent="Layouts" startPc="268438378">
+<param id="dc"/>
+<documentation/>
+</functionEntry>
+<functionEntry accessMode="public" endPc="268439057" name="BottomLeftLayout" parent="Layouts" startPc="268438718">
+<param id="dc"/>
+<documentation/>
+</functionEntry>
+<functionEntry accessMode="public" endPc="268439397" name="BottomRightLayout" parent="Layouts" startPc="268439058">
+<param id="dc"/>
+<documentation/>
+</functionEntry>
+<functionEntry accessMode="protected" endPc="268439445" name="&lt;init&gt;" parent="Layouts" startPc="268439445">
+<documentation/>
+</functionEntry>
+<functionEntry accessMode="protected" endPc="268439443" name="&lt;init&gt;" parent="Menus" startPc="268439443">
+<documentation/>
+</functionEntry>
+<functionEntry accessMode="protected" endPc="268439447" name="&lt;init&gt;" parent="Strings" startPc="268439447">
+<documentation/>
+</functionEntry>
+<functionEntry accessMode="protected" endPc="268439441" name="&lt;init&gt;" parent="Rez" startPc="268439418">
+<documentation/>
+</functionEntry>
+</functions>
+</debugInfo>
