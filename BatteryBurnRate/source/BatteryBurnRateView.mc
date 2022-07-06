@@ -11,14 +11,17 @@ using Toybox.Time;
 
 class BatteryBurnRateView extends WatchUi.DataField {
 
-	// Algorithm, v2.   Capture primary data points every 
-	// time the battery charge changes more than 1%  
-
+	// Algorithm, v2.
+	// Capture 16 data points per hour, plus a data point on battery 
+	// level change.   So the estimate is based upon at most one hour of 
+	// data, or less if the battery is dropping faster. 
+	
 	// Primary data point collection.
 	const      pdp_data_points    = 16;              // This make masks easy.   ATTN! Must be 2^N
 	const      pdp_data_mask = pdp_data_points - 1;  
 
-	const      pdp_sample_timeout_tunable = 300*1000; // Capture a data point if no change...
+	// The timeout determines the baseline sampling rate.  Keep at most a hour of data.
+	const      pdp_sample_timeout_tunable = 225*1000; // Capture a data point if no change...
 	var        pdp_sample_timeout_ms;                 // The countdown variable.
 	var        pdp_sample_time_last_ms; 
 
@@ -41,7 +44,7 @@ class BatteryBurnRateView extends WatchUi.DataField {
 
 		pdp_data_i = 0; // The total number of samples.
 		pdp_sample_time_last_ms = System.getTimer(); 
-		pdp_sample_timeout_ms   = 0; 
+		pdp_sample_timeout_ms   = pdp_sample_timeout_tunable / 2; 
 
 		pdp_data_time_ut = new [ pdp_data_points ];
 		pdp_data_battery = new [ pdp_data_points ];
@@ -106,7 +109,6 @@ class BatteryBurnRateView extends WatchUi.DataField {
 		var fitsize = pdp_data_i;
 		if ( fitsize > pdp_data_points ) { fitsize = pdp_data_points; }
 
-		System.print("Estimate: "); 
 		// Make a snapstop of the real data and align it + normalize to hours.
 		// Recall that the data buffer pointer is always pointing to the oldest item in the ring. 
 		var data_x       = new [ pdp_data_points ];
@@ -163,8 +165,9 @@ class BatteryBurnRateView extends WatchUi.DataField {
 	// The primary collection loop uses the system ms timer along with 
 	// a running error a la Bresenhams algorithm.
 
-	// Collect a data point when the Battery level changes by at least 1% 
-	// or there has been a timeout.  
+	// Collect a data point when the Battery level changes or there has been a timeout.  
+	// The net result of this is that the app keeps at most an hour of data,
+	// and less if the battery level is changing fast. 
 
     function compute(info) {
 
@@ -177,7 +180,7 @@ class BatteryBurnRateView extends WatchUi.DataField {
 
 			pdp_sample_timeout_ms -= duration; // Use Bresenhams Algorithm.
 
-			if ( pdp_sample_timeout_ms  < 0 ) {
+			if ( pdp_sample_timeout_ms  <= 0 ) {
 				timeout_happened = 1;
 				pdp_sample_timeout_ms += pdp_sample_timeout_tunable;
 				// System.println("Sampling Timeout"); 
@@ -187,18 +190,20 @@ class BatteryBurnRateView extends WatchUi.DataField {
 
 		// Now decide whether or not to keep the sample.
 		// if things are plugged in, no. FIXME 
+
 		// RS: Maybe this isn't necessary if the app simply declines 
 		// to show bogus data. 
 		var systemStats = System.getSystemStats();
 		var battery = systemStats == null ? null : systemStats.battery;
 		if ( battery == null ) { return; }
 
-		// If the value of the battery percentage has changed more than 
-		// 1%, or a timeout has occurred, capture a data point. 
+		// If the value of the battery percentage has changed 
+		// or a timeout has occurred, capture a data point. 
 		// var delta = (pdp_battery_last - battery).abs();
 		// if ( (delta < 1.0) && (timeout_happened == 0) ) { return; } 
 
-		if ( pdp_battery_last ==  battery ) { return; } 
+		// if ( pdp_battery_last == battery ) { return; } 
+		if ( timeout_happened == 0 && pdp_battery_last == battery ) { return; } 
 
 		pdp_battery_last = battery;
 
@@ -248,13 +253,13 @@ class BatteryBurnRateView extends WatchUi.DataField {
 		    dataColor = Graphics.COLOR_RED;
 		}
 
-		// Display the data.  If its an invalid value, render as dots. 
+		// Display the data.  If its an invalid value, render as dashes
         var value = View.findDrawableById("value");
         if (  burn_rate_slope != burn_rate_invalid ) {
 			var abs_d = burn_rate_slope.abs();
 	        value.setText(abs_d.format("%.1f") + "%");
         } else {
-        	value.setText("...");
+        	value.setText("---");
     	}
 
 		// Done with Formatting, choose the color.
