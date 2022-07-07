@@ -46,7 +46,7 @@ class BatteryBurnRateView extends WatchUi.DataField {
 		pdp_sample_time_last_ms = System.getTimer(); 
 		pdp_sample_timeout_ms   = pdp_sample_timeout_tunable / 2;  
 
-		burn_rate_slope = 0.0;
+		burn_rate_slope = burn_rate_invalid;
  	  }
  
 
@@ -181,6 +181,21 @@ class BatteryBurnRateView extends WatchUi.DataField {
 
     function compute(info) {
 
+		var systemStats = System.getSystemStats();
+
+		// Handle the case where the stats are null.
+		var n_charging = systemStats == null ? null : systemStats.charging;
+
+		// Pre-business.   Check for a change in system battery state, 
+		// and if it happens, reset data collection and re-start measurement.
+		// do this rather than exiting early so that the rest of the system is 
+		// in a good state.   
+		if ( ( n_charging == null ) || ( n_charging != charging )  ) {
+			charging = n_charging;
+			data_reset();
+			return; 
+		}
+
 		// Update the timeout. 
 		var timeout_happened; 
 		{
@@ -203,9 +218,7 @@ class BatteryBurnRateView extends WatchUi.DataField {
 
 		// RS: Maybe this isn't necessary if the app simply declines 
 		// to show bogus data. 
-		var systemStats = System.getSystemStats();
-		var battery = systemStats == null ? null : systemStats.battery;
-		if ( battery == null ) { return; }
+		var battery = systemStats.battery;
 
 		// If the value of the battery percentage has changed 
 		// or a timeout has occurred, capture a data point. 
@@ -251,8 +264,8 @@ class BatteryBurnRateView extends WatchUi.DataField {
 		}
         View.findDrawableById("Background").setColor(getBackgroundColor());
 
-		// Display Burn and Charge separately.
-		if ( burn_rate_slope > 0.0 )  {
+		// Display Burn and Charge separately.  Charging isn't necessarily valid.
+		if ( charging == true )  {
 	        label.setText("Charge/h");
 		} else { 
 		    label.setText("Burn/h");
