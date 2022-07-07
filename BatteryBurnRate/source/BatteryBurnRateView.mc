@@ -31,6 +31,8 @@ class BatteryBurnRateView extends WatchUi.DataField {
 
 	hidden var pdp_battery_last;        // Trigger data collection on  battery level change.
 
+	hidden var charging;                // Save the state. 
+
 	hidden var burn_rate_slope;            // Burn rate as a slope. 
 	const      burn_rate_invalid = 1000.0; // A Magic Value  
 
@@ -38,19 +40,27 @@ class BatteryBurnRateView extends WatchUi.DataField {
 	// Make the display red if burn rate exceeds 12%/h 
 	const veryHighBurnRate = -12.0;
 	
+	// Reset the data collection system.
+   function data_reset() {
+		pdp_data_i = 0; // The total number of samples.
+		pdp_sample_time_last_ms = System.getTimer(); 
+		pdp_sample_timeout_ms   = pdp_sample_timeout_tunable / 2;  
+
+		burn_rate_slope = 0.0;
+ 	  }
+ 
+
     // Set the label of the data field here.
     function initialize() {
         DataField.initialize();
-
-		pdp_data_i = 0; // The total number of samples.
-		pdp_sample_time_last_ms = System.getTimer(); 
-		pdp_sample_timeout_ms   = pdp_sample_timeout_tunable / 2; 
 
 		pdp_data_time_ut = new [ pdp_data_points ];
 		pdp_data_battery = new [ pdp_data_points ];
 		pdp_battery_last = 200.0; // Set this to an invalid value so that it triggers immediately.
 
-		burn_rate_slope = 0.0;
+		charging = null;
+
+		data_reset();
 
 		System.println("BatteryBurnRate Started"); 
     }
