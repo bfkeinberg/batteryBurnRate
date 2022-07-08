@@ -34,7 +34,6 @@ class BatteryBurnRateView extends WatchUi.DataField {
 	hidden var charging;                // Save the state. 
 
 	hidden var burn_rate_slope;            // Burn rate as a slope. 
-	const      burn_rate_invalid = 1000.0; // A Magic Value  
 
 	// TUNABLES 
 	// Make the display red if burn rate exceeds 12%/h 
@@ -46,7 +45,7 @@ class BatteryBurnRateView extends WatchUi.DataField {
 		pdp_sample_time_last_ms = System.getTimer(); 
 		pdp_sample_timeout_ms   = pdp_sample_timeout_tunable / 2;  
 
-		burn_rate_slope = burn_rate_invalid;
+		burn_rate_slope = null;
  	  }
  
 
@@ -106,7 +105,7 @@ class BatteryBurnRateView extends WatchUi.DataField {
 		if ( pdp_data_i < 2 ) {
 			// TODO: Put some code here to generate a message. 
 			System.println("# Too Soon to estimate()");
-			burn_rate_slope = burn_rate_invalid;
+			burn_rate_slope = null;
 			return;
 			}
 
@@ -142,7 +141,6 @@ class BatteryBurnRateView extends WatchUi.DataField {
 
 		// From https://www.mathsisfun.com/data/least-squares-regression.html
 
-		var slope; 
 		{
 			var sum_x, sum_y, sum_xx, sum_xy; 
 			sum_x = 0.0; sum_y = 0.0; sum_xx = 0.0; sum_xy = 0.0;
@@ -156,14 +154,17 @@ class BatteryBurnRateView extends WatchUi.DataField {
 			var num   = fitsize * sum_xy - sum_x * sum_y; 
 			var denom = fitsize * sum_xx - sum_x * sum_x; 
 
-			// Check for divide by zero.
-			if ( denom != 0.0 ) { slope = num / denom; }
-			else                { slope = 0.0; }
+			// Check for divide by zero and zero slope
+			if ( num == 0.0 || denom == 0.0 ) {
+				burn_rate_slope = null;
+				System.println("extrapolate: null");
+			} else {
+				burn_rate_slope = num / denom; 
+				System.println("extrapolate," + slope.format("%.1f") );
+			}
 		}
-
 		// The input unit is already in percent. 
-		System.println("extrapolate," + slope.format("%.1f") );
-		burn_rate_slope = slope; 
+
 	}
 
     // The given info object contains all the current workout
@@ -271,18 +272,19 @@ class BatteryBurnRateView extends WatchUi.DataField {
 		    label.setText("Burn/h");
 		}
 
-		// Check for pathology and set the color if need be. 
-		if ( burn_rate_slope < veryHighBurnRate ) {
-		    dataColor = Graphics.COLOR_RED;
-		}
-
 		// Display the data.  If its an invalid value, render as dashes
         var value = View.findDrawableById("value");
-        if (  burn_rate_slope != burn_rate_invalid ) {
+        if (  burn_rate_slope != null ) {
+
+			// Check for pathology and set the color if need be. 
+			if ( burn_rate_slope < veryHighBurnRate ) {
+			    dataColor = Graphics.COLOR_RED;
+			}
+
 			var abs_d = burn_rate_slope.abs();
 	        value.setText(abs_d.format("%.1f") + "%");
         } else {
-        	value.setText("---");
+        	value.setText("-wait-");
     	}
 
 		// Done with Formatting, choose the color.
