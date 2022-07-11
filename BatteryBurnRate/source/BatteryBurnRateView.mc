@@ -4,6 +4,7 @@ using Toybox.Graphics;
 using Toybox.Test;
 using Toybox.AntPlus;
 using Toybox.Time;
+using Toybox.Time.Gregorian;
 
 // Notes.    
 // Functional, w/ Old code:      Code 5109 bytes, Data 1790 bytes.
@@ -28,6 +29,8 @@ class BatteryBurnRateView extends WatchUi.DataField {
 	hidden var pdp_data_battery;        // Battery data points.
 	hidden var pdp_data_time_ut;	    // Timestamps to go with the data. 
 	hidden var pdp_data_i;	            // Index.  Use with a mask.
+
+	hidden var start_t0_ut;             // For logging
 
 	hidden var pdp_battery_last;        // Trigger data collection on  battery level change.
 
@@ -57,11 +60,22 @@ class BatteryBurnRateView extends WatchUi.DataField {
 		pdp_data_battery = new [ pdp_data_points ];
 		pdp_battery_last = 200.0; // Set this to an invalid value so that it triggers immediately.
 
+		start_t0_ut      =  Time.now().value();
+
 		charging = null;
 
 		data_reset();
 
-		System.println("BatteryBurnRate Started"); 
+		var today = Gregorian.info(Time.now(), Time.FORMAT_MEDIUM);
+		var dateString = Lang.format(
+	    	"$1$-$2$-$3$ $4$:$5$:$6$",
+		    [
+   		 	today.year, today.month, today.day,
+    	    today.hour, today.min, today.sec
+    		] );
+
+		System.println("# BatteryBurnRate Started " + dateString);
+		System.println("# time(h), time(s), battery level, charging(Y/N)");
     }
 
     // Set your layout here. Anytime the size of obscurity of
@@ -104,7 +118,7 @@ class BatteryBurnRateView extends WatchUi.DataField {
 		// If there isn't enough data, stop now. 
 		if ( pdp_data_i < 2 ) {
 			// TODO: Put some code here to generate a message. 
-			System.println("# Too Soon to estimate()");
+			// System.println("# Too Soon to estimate()");
 			burn_rate_slope = 0.0;
 			return;
 			}
@@ -160,7 +174,7 @@ class BatteryBurnRateView extends WatchUi.DataField {
 			} else {
 				burn_rate_slope = num / denom; 
 			}
-			System.println("extrapolate," + burn_rate_slope.format("%.1f") );
+			// System.println("# extrapolate," + burn_rate_slope.format("%.1f") );
 		}
 		// The input unit is already in percent. 
 
@@ -228,20 +242,36 @@ class BatteryBurnRateView extends WatchUi.DataField {
 		// if ( pdp_battery_last == battery ) { return; } 
 		if ( timeout_happened == 0 && pdp_battery_last == battery ) { return; } 
 
-		pdp_battery_last = battery;
-
 		var i      = pdp_data_i & pdp_data_mask;
 
 		pdp_data_time_ut[i] =  Time.now().value();
 
-		// Do these with larger operations to lower logging overhead.
-		if ( timeout_happened ) {
-			System.println(pdp_data_i + "," + pdp_data_time_ut[i] + "," + battery + ",to"); 
-		} else {
-			System.println(pdp_data_i + "," + pdp_data_time_ut[i] + "," + battery ); 
+		// Logging
+		if ( pdp_battery_last != battery ) {
+			var ts = pdp_data_time_ut[i] - start_t0_ut;
+			var formatted = "";
+			formatted += ts* 0.000277777777777777777777 + ",";
+			formatted += ts + ",";
+			formatted += battery + ",";
+			if ( charging == 0 ) {
+				formatted += "N";
+			} else {
+				formatted += "Y";
+			}
+
+			System.println(formatted); 
 		}
 
+		// Do these with larger operations to lower logging overhead.
+		//if ( timeout_happened ) {
+		//	System.println(pdp_data_i + "," + pdp_data_time_ut[i] + "," + battery + ",to"); 
+		//} else {
+		//	System.println(pdp_data_i + "," + pdp_data_time_ut[i] + "," + battery ); 
+		//}
+
 		pdp_data_battery[i] = battery;
+		pdp_battery_last    = battery;
+
 		pdp_data_i++;
 
 		update_estimate();
