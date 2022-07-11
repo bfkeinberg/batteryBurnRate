@@ -45,7 +45,7 @@ class BatteryBurnRateView extends WatchUi.DataField {
 		pdp_sample_time_last_ms = System.getTimer(); 
 		pdp_sample_timeout_ms   = pdp_sample_timeout_tunable / 2;  
 
-		burn_rate_slope = null;
+		burn_rate_slope = 0.0;
  	  }
  
 
@@ -105,7 +105,7 @@ class BatteryBurnRateView extends WatchUi.DataField {
 		if ( pdp_data_i < 2 ) {
 			// TODO: Put some code here to generate a message. 
 			System.println("# Too Soon to estimate()");
-			burn_rate_slope = null;
+			burn_rate_slope = 0.0;
 			return;
 			}
 
@@ -156,12 +156,11 @@ class BatteryBurnRateView extends WatchUi.DataField {
 
 			// Check for divide by zero and zero slope
 			if ( num == 0.0 || denom == 0.0 ) {
-				burn_rate_slope = null;
-				System.println("extrapolate: null");
+				burn_rate_slope = 0.0;
 			} else {
 				burn_rate_slope = num / denom; 
-				System.println("extrapolate," + slope.format("%.1f") );
 			}
+			System.println("extrapolate," + burn_rate_slope.format("%.1f") );
 		}
 		// The input unit is already in percent. 
 
@@ -274,7 +273,7 @@ class BatteryBurnRateView extends WatchUi.DataField {
 
 		// Display the data.  If its an invalid value, render as dashes
         var value = View.findDrawableById("value");
-        if (  burn_rate_slope != null ) {
+        if (  burn_rate_slope != 0 ) {
 
 			// Check for pathology and set the color if need be. 
 			if ( burn_rate_slope < veryHighBurnRate ) {
