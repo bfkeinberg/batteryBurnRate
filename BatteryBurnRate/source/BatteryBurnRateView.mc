@@ -337,7 +337,7 @@ class BatteryBurnRateView extends WatchUi.DataField {
 
 			var abs_d = burn_rate_slope.abs();
 	        value.setText(abs_d.format("%.1f") + "%");
-			showRemain(abs_d);
+			// showRemain(abs_d);
         } else {
         	value.setText("-wait-");
     	}
