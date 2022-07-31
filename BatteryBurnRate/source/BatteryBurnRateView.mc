@@ -76,6 +76,31 @@ class BatteryBurnRateView extends WatchUi.DataField {
         currentBurnRate = getBurnRate();
     }
     
+	function showRemain(burnRate)
+	{
+		var systemStats = System.getSystemStats();
+		var calculated_remain = View.findDrawableById("remain");
+		var burnRateAsNum = burnRate;
+		if (burnRate != null && burnRate instanceof String) {
+			if (burnRate == "Calculating...") {
+				burnRateAsNum = null;
+			}
+			System.println("burn rate before conversion to float is " + burnRate);
+			burnRateAsNum = burnRate.toFloat();
+		}
+		if (systemStats != null && systemStats.battery != null && burnRateAsNum != null && burnRateAsNum > 0) {
+			var calcRemain = systemStats.battery / burnRateAsNum;
+			System.println("Time remaining is " + calcRemain + " with battery of " + systemStats.battery + " and burn of " + burnRateAsNum + " rate " + burnRate);
+			if (calculated_remain != null) {
+				if (calcRemain > 1) {
+					calculated_remain.setText(calcRemain.format("%.1f") + " hours left");
+				} else {
+					calculated_remain.setText((calcRemain*60).format("%.1f") + " minutes left");
+				}
+			}
+		}
+	}
+
    //! Display the value you computed here. This will be called
     //! once a second when the data field is visible.
     function onUpdate(dc)
@@ -98,6 +123,7 @@ class BatteryBurnRateView extends WatchUi.DataField {
         View.findDrawableById("Background").setColor(getBackgroundColor());
         var value = View.findDrawableById("value");
         value.setColor(dataColor);
+		showRemain(currentBurnRate);
         if (!(currentBurnRate instanceof String)) {
 			var burnRateString = currentBurnRate.format("%.1f") + "%";
 	        value.setText(burnRateString);
