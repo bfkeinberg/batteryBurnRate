@@ -3,34 +3,79 @@ using Toybox.System;
 using Toybox.Graphics;
 using Toybox.Test;
 using Toybox.AntPlus;
+using Toybox.Time;
+using Toybox.Time.Gregorian;
+
+// Notes.    
+// Functional, w/ Old code:      Code 5109 bytes, Data 1790 bytes.
+// Functional  removed old code: Code 4110 bytes, Data 1451 bytes.
 
 class BatteryBurnRateView extends WatchUi.DataField {
-	const secondsInHour = 3600;
-	const warmupTime = 1200;
-	const veryHighBurnRate = 12;
-	const lowMemoryDivisor = 6;
-	var batteryValues;
-	var timesForBattery;
-	var lowMemoryMode = false;	
+
+	// Algorithm, v2.
+	// Capture 16 data points per hour, plus a data point on battery 
+	// level change.   So the estimate is based upon at most one hour of 
+	// data, or less if the battery is dropping faster. 
 	
-	var startingTimeInMs;
-	var lastBurnRate;
-	var currentBurnRate;
+	// Primary data point collection.
+	const      pdp_data_points    = 16;              // This make masks easy.   ATTN! Must be 2^N
+	const      pdp_data_mask = pdp_data_points - 1;  
+
+	// The timeout determines the baseline sampling rate.  Keep at most a hour of data.
+	const      pdp_sample_timeout_tunable = 225*1000; // Capture a data point if no change...
+	var        pdp_sample_timeout_ms;                 // The countdown variable.
+	var        pdp_sample_time_last_ms; 
+
+	hidden var pdp_data_battery;        // Battery data points.
+	hidden var pdp_data_time_ut;	    // Timestamps to go with the data. 
+	hidden var pdp_data_i;	            // Index.  Use with a mask.
+
+	hidden var start_t0_ut;             // For logging
+
+	hidden var pdp_battery_last;        // Trigger data collection on  battery level change.
+
+	hidden var charging;                // Save the state. 
+
+	hidden var burn_rate_slope;            // Burn rate as a slope. 
+
+	// TUNABLES 
+	// Make the display red if burn rate exceeds 12%/h 
+	const veryHighBurnRate = -12.0;
 	
+	// Reset the data collection system.
+   function data_reset() {
+		pdp_data_i = 0; // The total number of samples.
+		pdp_sample_time_last_ms = System.getTimer(); 
+		pdp_sample_timeout_ms   = pdp_sample_timeout_tunable / 2;  
+
+		burn_rate_slope = 0.0;
+ 	  }
+ 
+
     // Set the label of the data field here.
     function initialize() {
         DataField.initialize();
-        startingTimeInMs = System.getTimer();
-        lastBurnRate = 0;
-        currentBurnRate = 0;
-		if (System.getSystemStats().freeMemory > 20000) {
-			batteryValues = new [secondsInHour];
-			timesForBattery = new [secondsInHour];
-		} else {
-			batteryValues = new [secondsInHour/6];
-			timesForBattery = new [secondsInHour/6];
-			lowMemoryMode = true;		
-		}
+
+		pdp_data_time_ut = new [ pdp_data_points ];
+		pdp_data_battery = new [ pdp_data_points ];
+		pdp_battery_last = 200.0; // Set this to an invalid value so that it triggers immediately.
+
+		start_t0_ut      =  Time.now().value();
+
+		charging = null;
+
+		data_reset();
+
+		var today = Gregorian.info(Time.now(), Time.FORMAT_MEDIUM);
+		var dateString = Lang.format(
+	    	"$1$-$2$-$3$ $4$:$5$:$6$",
+		    [
+   		 	today.year, today.month, today.day,
+    	    today.hour, today.min, today.sec
+    		] );
+
+		System.println("# BatteryBurnRate Started " + dateString);
+		System.println("# time(h), time(s), battery level, charging(Y/N)");
     }
 
     // Set your layout here. Anytime the size of obscurity of
@@ -67,13 +112,169 @@ class BatteryBurnRateView extends WatchUi.DataField {
         return true;
     }
 
+	// Calculate the least squares fit of the data. 
+    function update_estimate() {
+
+		// If there isn't enough data, stop now. 
+		if ( pdp_data_i < 2 ) {
+			// TODO: Put some code here to generate a message. 
+			// System.println("# Too Soon to estimate()");
+			burn_rate_slope = 0.0;
+			return;
+			}
+
+		// Fit to whatever is present, even if its not much.
+		var data_offset  = pdp_data_i; // This should be the oldest point.
+
+		// Partial data is a special case. Start at zero. 
+		if ( data_offset < pdp_data_points ) { data_offset = 0; }
+
+		var fitsize = pdp_data_i;
+		if ( fitsize > pdp_data_points ) { fitsize = pdp_data_points; }
+
+		// Make a snapstop of the real data and align it + normalize to hours.
+		// Recall that the data buffer pointer is always pointing to the oldest item in the ring. 
+		var data_x       = new [ pdp_data_points ];
+		var data_y       = new [ pdp_data_points ];
+
+		{
+			var t0 = pdp_data_time_ut[data_offset & pdp_data_mask];
+
+			// Convert from seconds to hours...
+
+			for (var i=0; i < fitsize; i++) {
+				var adj_i = (i + data_offset) & pdp_data_mask; 
+
+				var ut = pdp_data_time_ut[adj_i];
+
+				// Seconds to Hours. 
+      			data_x[i] = (ut - t0) *  0.000277777777777777777777; 
+				data_y[i] = pdp_data_battery[adj_i];
+    		}
+		}
+
+		// From https://www.mathsisfun.com/data/least-squares-regression.html
+
+		{
+			var sum_x, sum_y, sum_xx, sum_xy; 
+			sum_x = 0.0; sum_y = 0.0; sum_xx = 0.0; sum_xy = 0.0;
+			for (var i=0; i < fitsize; i++){
+				sum_x  += data_x[i]; 
+				sum_y  += data_y[i];
+				sum_xx += data_x[i] * data_x[i]; 
+				sum_xy += data_x[i] * data_y[i]; 
+    		}
+
+			var num   = fitsize * sum_xy - sum_x * sum_y; 
+			var denom = fitsize * sum_xx - sum_x * sum_x; 
+
+			// Check for divide by zero and zero slope
+			if ( num == 0.0 || denom == 0.0 ) {
+				burn_rate_slope = 0.0;
+			} else {
+				burn_rate_slope = num / denom; 
+			}
+			// System.println("# extrapolate," + burn_rate_slope.format("%.1f") );
+		}
+		// The input unit is already in percent. 
+
+	}
+
     // The given info object contains all the current workout
     // information. Calculate a value and return it in this method.
     // Note that compute() and onUpdate() are asynchronous, and there is no
     // guarantee that compute() will be called before onUpdate().
+
+	// Notes on data collection -
+	// The primary collection loop uses the system ms timer along with 
+	// a running error a la Bresenhams algorithm.
+
+	// Collect a data point when the Battery level changes or there has been a timeout.  
+	// The net result of this is that the app keeps at most an hour of data,
+	// and less if the battery level is changing fast. 
+
     function compute(info) {
-        // See Activity.Info in the documentation for available information.
-        currentBurnRate = getBurnRate();
+
+		var systemStats = System.getSystemStats();
+
+		// Handle the case where the stats are null.
+		var n_charging = systemStats == null ? null : systemStats.charging;
+
+		// Pre-business.   Check for a change in system battery state, 
+		// and if it happens, reset data collection and re-start measurement.
+		// do this rather than exiting early so that the rest of the system is 
+		// in a good state.   
+		if ( ( n_charging == null ) || ( n_charging != charging )  ) {
+			charging = n_charging;
+			data_reset();
+			return; 
+		}
+
+		// Update the timeout. 
+		var timeout_happened; 
+		{
+			var now = System.getTimer();
+			var duration = now - pdp_sample_time_last_ms;
+			pdp_sample_time_last_ms = now;
+
+			pdp_sample_timeout_ms -= duration; // Use Bresenhams Algorithm.
+
+			if ( pdp_sample_timeout_ms  <= 0 ) {
+				timeout_happened = 1;
+				pdp_sample_timeout_ms += pdp_sample_timeout_tunable;
+				// System.println("Sampling Timeout"); 
+ 			}
+			else { timeout_happened = 0; }
+		} 
+
+		// Now decide whether or not to keep the sample.
+		// if things are plugged in, no. FIXME 
+
+		// RS: Maybe this isn't necessary if the app simply declines 
+		// to show bogus data. 
+		var battery = systemStats.battery;
+
+		// If the value of the battery percentage has changed 
+		// or a timeout has occurred, capture a data point. 
+		// var delta = (pdp_battery_last - battery).abs();
+		// if ( (delta < 1.0) && (timeout_happened == 0) ) { return; } 
+
+		// if ( pdp_battery_last == battery ) { return; } 
+		if ( timeout_happened == 0 && pdp_battery_last == battery ) { return; } 
+
+		var i      = pdp_data_i & pdp_data_mask;
+
+		pdp_data_time_ut[i] =  Time.now().value();
+
+		// Logging
+		if ( pdp_battery_last != battery ) {
+			var ts = pdp_data_time_ut[i] - start_t0_ut;
+			var formatted = "";
+			formatted += ts* 0.000277777777777777777777 + ",";
+			formatted += ts + ",";
+			formatted += battery + ",";
+			if ( charging == 0 ) {
+				formatted += "N";
+			} else {
+				formatted += "Y";
+			}
+
+			System.println(formatted); 
+		}
+
+		// Do these with larger operations to lower logging overhead.
+		//if ( timeout_happened ) {
+		//	System.println(pdp_data_i + "," + pdp_data_time_ut[i] + "," + battery + ",to"); 
+		//} else {
+		//	System.println(pdp_data_i + "," + pdp_data_time_ut[i] + "," + battery ); 
+		//}
+
+		pdp_data_battery[i] = battery;
+		pdp_battery_last    = battery;
+
+		pdp_data_i++;
+
+		update_estimate();
     }
     
 	function showRemain(burnRate)
@@ -103,12 +304,12 @@ class BatteryBurnRateView extends WatchUi.DataField {
 
    //! Display the value you computed here. This will be called
     //! once a second when the data field is visible.
-    function onUpdate(dc)
-    {
+    function onUpdate(dc) {
 	    var dataColor;
-	    
         var label = View.findDrawableById("label");
-        label.setText("Burn rate %/hour");
+
+		// Reverse the colors for day/night and set the default 
+		// value for the color of the data color. 
 	    if (getBackgroundColor() == Graphics.COLOR_BLACK) {
 	        label.setColor(Graphics.COLOR_WHITE);
 			dataColor = Graphics.COLOR_WHITE;
@@ -116,98 +317,34 @@ class BatteryBurnRateView extends WatchUi.DataField {
 	        label.setColor(Graphics.COLOR_BLACK);
 			dataColor = Graphics.COLOR_BLACK;
 		}
-		var burnRateIsString = currentBurnRate instanceof String;
-	    if (!(currentBurnRate instanceof String) && currentBurnRate > veryHighBurnRate) {
-	    	dataColor = Graphics.COLOR_RED;
-    	}
         View.findDrawableById("Background").setColor(getBackgroundColor());
+
+		// Display Burn and Charge separately.  Charging isn't necessarily valid.
+		if ( charging == true )  {
+	        label.setText("Charge/h");
+		} else { 
+		    label.setText("Burn/h");
+		}
+
+		// Display the data.  If its an invalid value, render as dashes
         var value = View.findDrawableById("value");
-        value.setColor(dataColor);
-		showRemain(currentBurnRate);
-        if (!(currentBurnRate instanceof String)) {
-			var burnRateString = currentBurnRate.format("%.1f") + "%";
-	        value.setText(burnRateString);
+        if (  burn_rate_slope != 0 ) {
+
+			// Check for pathology and set the color if need be. 
+			if ( burn_rate_slope < veryHighBurnRate ) {
+			    dataColor = Graphics.COLOR_RED;
+			}
+
+			var abs_d = burn_rate_slope.abs();
+	        value.setText(abs_d.format("%.1f") + "%");
+			showRemain(abs_d);
         } else {
-        	value.setText(currentBurnRate);
+        	value.setText("-wait-");
     	}
+
+		// Done with Formatting, choose the color.
+        value.setColor(dataColor);
+		
         View.onUpdate(dc);
-	}    
-
-	function convertSecondsForLookup(seconds) {
-		if (lowMemoryMode) {
-			return seconds/lowMemoryDivisor;
-		} else {
-			return seconds;
-		}
-	}
-	 	
-	function getBurnRate() {
-		var timeInMs = System.getTimer();
-		var seconds = (timeInMs - me.startingTimeInMs) / 1000;
-		var currentHourSecond = seconds % self.secondsInHour; 
-		var currentHour = seconds / self.secondsInHour;
-		var systemStats = System.getSystemStats();
-		var battery = systemStats == null ? null : systemStats.battery;
-		var burnRate = 0;
-		if (battery != null) {
-			var effectiveHourSecond = convertSecondsForLookup(currentHourSecond);
-			if (seconds < me.secondsInHour) {
-				if (seconds < me.warmupTime) {
-					burnRate = "Calculating...";
-					getBurnRateFirstHour(convertSecondsForLookup(seconds), battery);
-				} else {
-					burnRate = getBurnRateFirstHour(convertSecondsForLookup(seconds), battery);
-				}
-			} else {
-				burnRate = getBurnRateLaterHours(effectiveHourSecond, currentHour, battery);		
-			}
-			self.timesForBattery[effectiveHourSecond] = currentHour;
-			self.batteryValues[effectiveHourSecond] = battery;			
-		}
-		if (burnRate != 0) {
-			me.lastBurnRate = burnRate;
-		} else {
-			burnRate = me.lastBurnRate;
-		}
-		return burnRate;
-	}
-
-	function getBurnRateFirstHour(seconds, battery) {
-		if (seconds == 0) {
-			return 0;
-		} 
-		if (batteryValues[0] == null) {
-			System.println("No initial battery value at " + seconds);
-			batteryValues[0] = battery;
-			timesForBattery[0] = 0;
-			return 0;
-		}
-		var drainFromStart = batteryValues[0] - battery;
-		return (secondsInHour * drainFromStart) / seconds;
-	}
-
-	function findClosestBatteryValue(seconds) {
-		for (var where = 0; where < 5 && seconds >= where; ++where) {
-			if (batteryValues[seconds-where] != null && timesForBattery[seconds-where] != null) {
-				return [ timesForBattery[seconds-where], me.batteryValues[seconds-where] ];
-			}
-		}
-		return null;
-	} 
-	
-	function getBurnRateLaterHours(seconds, currentHour, battery) {
-		var previousBatteryValue = findClosestBatteryValue(seconds);
-		if (previousBatteryValue == null) {
-			System.println("No battery value at " + seconds + " seconds");
-			return me.lastBurnRate;
-		}
-		var elapsedHours = currentHour - previousBatteryValue[0];
-		if (elapsedHours > 1) {
-			var drainPerHour = (previousBatteryValue[1] - battery)/elapsedHours;
-			return drainPerHour;
-		} else {
-			return me.lastBurnRate;
-		}
-	}	
-	
+	}    	
 }
