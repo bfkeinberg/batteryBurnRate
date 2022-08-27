@@ -98,7 +98,12 @@ class BatteryBurnRateView extends WatchUi.DataField {
         // Bottom right quadrant so we'll use the bottom right layout
         } else if (obscurityFlags == (OBSCURE_BOTTOM | OBSCURE_RIGHT)) {
             View.setLayout(Rez.Layouts.BottomRightLayout(dc));
-
+		} else if (dc.getHeight() > 65) {
+            View.setLayout(Rez.Layouts.LargerLayout(dc));
+            var labelView = View.findDrawableById("label");
+            labelView.locY = labelView.locY - 14;
+            var valueView = View.findDrawableById("value");
+            valueView.locY = valueView.locY + 7;
         // Use the generic, centered layout
         } else {
             View.setLayout(Rez.Layouts.MainLayout(dc));
@@ -325,9 +330,9 @@ class BatteryBurnRateView extends WatchUi.DataField {
 		} else { 
 		    label.setText("Burn/h");
 		}
-
 		// Display the data.  If its an invalid value, render as dashes
         var value = View.findDrawableById("value");
+		System.println("Width is " + dc.getWidth() + " height is " + dc.getHeight());
         if (  burn_rate_slope != 0 ) {
 
 			// Check for pathology and set the color if need be. 
@@ -337,7 +342,9 @@ class BatteryBurnRateView extends WatchUi.DataField {
 
 			var abs_d = burn_rate_slope.abs();
 	        value.setText(abs_d.format("%.1f") + "%");
-			// showRemain(abs_d);
+			if (dc.getHeight() > 80) {
+				showRemain(abs_d);
+			}
         } else {
         	value.setText("-wait-");
     	}
