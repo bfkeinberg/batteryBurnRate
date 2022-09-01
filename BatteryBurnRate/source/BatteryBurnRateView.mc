@@ -98,12 +98,18 @@ class BatteryBurnRateView extends WatchUi.DataField {
         // Bottom right quadrant so we'll use the bottom right layout
         } else if (obscurityFlags == (OBSCURE_BOTTOM | OBSCURE_RIGHT)) {
             View.setLayout(Rez.Layouts.BottomRightLayout(dc));
+		} else if (dc.getHeight() > 100) {
+            View.setLayout(Rez.Layouts.LargestLayout(dc));
+            var labelView = View.findDrawableById("label");
+            labelView.locY = labelView.locY - 17;
+            var valueView = View.findDrawableById("value");
+            valueView.locY = valueView.locY + 12;
 		} else if (dc.getHeight() > 65) {
             View.setLayout(Rez.Layouts.LargerLayout(dc));
             var labelView = View.findDrawableById("label");
-            labelView.locY = labelView.locY - 14;
+            labelView.locY = labelView.locY - 16;
             var valueView = View.findDrawableById("value");
-            valueView.locY = valueView.locY + 7;
+            valueView.locY = valueView.locY + 11;
         // Use the generic, centered layout
         } else {
             View.setLayout(Rez.Layouts.MainLayout(dc));
@@ -291,12 +297,12 @@ class BatteryBurnRateView extends WatchUi.DataField {
 			if (burnRate == "Calculating...") {
 				burnRateAsNum = null;
 			}
-			System.println("burn rate before conversion to float is " + burnRate);
+			//System.println("burn rate before conversion to float is " + burnRate);
 			burnRateAsNum = burnRate.toFloat();
 		}
 		if (systemStats != null && systemStats.battery != null && burnRateAsNum != null && burnRateAsNum > 0) {
 			var calcRemain = systemStats.battery / burnRateAsNum;
-			System.println("Time remaining is " + calcRemain + " with battery of " + systemStats.battery + " and burn of " + burnRateAsNum + " rate " + burnRate);
+			//System.println("Time remaining is " + calcRemain + " with battery of " + systemStats.battery + " and burn of " + burnRateAsNum + " rate " + burnRate);
 			if (calculated_remain != null) {
 				if (calcRemain > 1) {
 					calculated_remain.setText(calcRemain.format("%.1f") + " hours left");
@@ -332,7 +338,14 @@ class BatteryBurnRateView extends WatchUi.DataField {
 		}
 		// Display the data.  If its an invalid value, render as dashes
         var value = View.findDrawableById("value");
-		System.println("Width is " + dc.getWidth() + " height is " + dc.getHeight());
+		//System.println("Width is " + dc.getWidth() + " height is " + dc.getHeight());
+		//System.println("Value is " + value.width + " x " + value.height);
+		if (dc.getHeight() > 100) {
+			value.setSize( value.width * 1.1, value.height * 1.1);
+		}
+		else if (dc.getHeight() > 75) {
+			value.setSize( value.width * 1.05, value.height * 1.05);
+		}
         if (  burn_rate_slope != 0 ) {
 
 			// Check for pathology and set the color if need be. 
