@@ -101,15 +101,15 @@ class BatteryBurnRateView extends WatchUi.DataField {
 		} else if (dc.getHeight() > 100) {
             View.setLayout(Rez.Layouts.LargestLayout(dc));
             var labelView = View.findDrawableById("label");
-            labelView.locY = labelView.locY - 17;
-            var valueView = View.findDrawableById("value");
-            valueView.locY = valueView.locY + 12;
+            labelView.locY = labelView.locY - 15;
+            // var valueView = View.findDrawableById("value");
+            // valueView.locY = valueView.locY + 12;
 		} else if (dc.getHeight() > 65) {
             View.setLayout(Rez.Layouts.LargerLayout(dc));
             var labelView = View.findDrawableById("label");
-            labelView.locY = labelView.locY - 16;
-            var valueView = View.findDrawableById("value");
-            valueView.locY = valueView.locY + 11;
+            labelView.locY = labelView.locY - 12;
+            // var valueView = View.findDrawableById("value");
+            // valueView.locY = valueView.locY + 11;
         // Use the generic, centered layout
         } else {
             View.setLayout(Rez.Layouts.MainLayout(dc));
