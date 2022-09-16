@@ -340,12 +340,12 @@ class BatteryBurnRateView extends WatchUi.DataField {
         var value = View.findDrawableById("value");
 		//System.println("Width is " + dc.getWidth() + " height is " + dc.getHeight());
 		//System.println("Value is " + value.width + " x " + value.height);
-		if (dc.getHeight() > 100) {
+		/* if (dc.getHeight() > 100) {
 			value.setSize( value.width * 1.1, value.height * 1.1);
 		}
 		else if (dc.getHeight() > 75) {
 			value.setSize( value.width * 1.05, value.height * 1.05);
-		}
+		} */
         if (  burn_rate_slope != 0 ) {
 
 			// Check for pathology and set the color if need be. 
