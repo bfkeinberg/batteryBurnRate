@@ -5,6 +5,7 @@ using Toybox.Test;
 using Toybox.AntPlus;
 using Toybox.Time;
 using Toybox.Time.Gregorian;
+import Toybox.Lang;
 
 // Notes.    
 // Functional, w/ Old code:      Code 5109 bytes, Data 1790 bytes.
@@ -26,8 +27,8 @@ class BatteryBurnRateView extends WatchUi.DataField {
 	var        pdp_sample_timeout_ms;                 // The countdown variable.
 	var        pdp_sample_time_last_ms; 
 
-	hidden var pdp_data_battery;        // Battery data points.
-	hidden var pdp_data_time_ut;	    // Timestamps to go with the data. 
+	hidden var pdp_data_battery as Array<Float>;        // Battery data points.
+	hidden var pdp_data_time_ut as Array<Number>;	    // Timestamps to go with the data. 
 	hidden var pdp_data_i;	            // Index.  Use with a mask.
 
 	hidden var start_t0_ut;             // For logging
@@ -56,8 +57,8 @@ class BatteryBurnRateView extends WatchUi.DataField {
     function initialize() {
         DataField.initialize();
 
-		pdp_data_time_ut = new [ pdp_data_points ];
-		pdp_data_battery = new [ pdp_data_points ];
+		pdp_data_time_ut = new Array<Number>[ pdp_data_points ];
+		pdp_data_battery = new Array<Float>[ pdp_data_points ];
 		pdp_battery_last = 200.0; // Set this to an invalid value so that it triggers immediately.
 
 		start_t0_ut      =  Time.now().value();
@@ -118,9 +119,9 @@ class BatteryBurnRateView extends WatchUi.DataField {
             var valueView = View.findDrawableById("value");
             valueView.locY = valueView.locY + 7;
         }
-
-        View.findDrawableById("label").setText(Rez.Strings.label);
-        return true;
+		var labelText = View.findDrawableById("label") as WatchUi.Text;
+        labelText.setText(Rez.Strings.label);
+        return;
     }
 
 	// Calculate the least squares fit of the data. 
@@ -291,7 +292,7 @@ class BatteryBurnRateView extends WatchUi.DataField {
 	function showRemain(burnRate)
 	{
 		var systemStats = System.getSystemStats();
-		var calculated_remain = View.findDrawableById("remain");
+		var calculated_remain = View.findDrawableById("remain") as WatchUi.Text;
 		var burnRateAsNum = burnRate;
 		if (burnRate != null && burnRate instanceof String) {
 			if (burnRate == "Calculating...") {
@@ -317,7 +318,7 @@ class BatteryBurnRateView extends WatchUi.DataField {
     //! once a second when the data field is visible.
     function onUpdate(dc) {
 	    var dataColor;
-        var label = View.findDrawableById("label");
+        var label = View.findDrawableById("label") as WatchUi.Text;
 
 		// Reverse the colors for day/night and set the default 
 		// value for the color of the data color. 
@@ -328,7 +329,8 @@ class BatteryBurnRateView extends WatchUi.DataField {
 	        label.setColor(Graphics.COLOR_BLACK);
 			dataColor = Graphics.COLOR_BLACK;
 		}
-        View.findDrawableById("Background").setColor(getBackgroundColor());
+		var background = View.findDrawableById("Background") as WatchUi.Text;
+        background.setColor(getBackgroundColor());
 
 		// Display Burn and Charge separately.  Charging isn't necessarily valid.
 		if ( charging == true )  {
@@ -337,7 +339,7 @@ class BatteryBurnRateView extends WatchUi.DataField {
 		    label.setText("Burn/h");
 		}
 		// Display the data.  If its an invalid value, render as dashes
-        var value = View.findDrawableById("value");
+        var value = View.findDrawableById("value") as WatchUi.Text;
 		//System.println("Width is " + dc.getWidth() + " height is " + dc.getHeight());
 		//System.println("Value is " + value.width + " x " + value.height);
 		/* if (dc.getHeight() > 100) {
