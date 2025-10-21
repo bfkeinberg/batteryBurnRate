@@ -311,6 +311,8 @@ class BatteryBurnRateView extends WatchUi.DataField {
 					calculated_remain.setText((calcRemain*60).format("%.1f") + " minutes left");
 				}
 			}
+		} else if (calculated_remain != null && (burnRateAsNum == null || burnRateAsNum == 0)) {
+			calculated_remain.setText("---");
 		}
 	}
 

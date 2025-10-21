@@ -1,3 +1,4 @@
 /.metadata/
 *.prg
 *.iq
+.DS_Store
